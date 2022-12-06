@@ -97,6 +97,7 @@ const DisplayController = (() => {
     const menu = document.querySelector(".menu");
     const end_screen = document.querySelector(".end-screen");
     const end_msg = document.querySelector(".end-msg");
+    const controls = document.querySelector(".controls");
 
     const displayBoard = (board) => {
         for (let i = 0; i < board.length; i++) {
@@ -143,6 +144,7 @@ const DisplayController = (() => {
 
     const displayEndScreen = (result, winner) => {
         end_screen.style.display = "block";
+        controls.style.display = "none";
         if (result === 'w') {
             end_msg.textContent = winner.getName() + " wins!";
         }
@@ -225,6 +227,24 @@ const GameFlow = (() => {
             DisplayController.displayMenuScreen();
             DisplayController.resetInputField();
         });
+    }) ();
+
+    const setUpResetBtn = (() => {
+        const reset_btn = document.querySelector("#reset");
+        reset_btn.addEventListener('click', () => {
+            initGame();
+            DisplayController.displayGameScreen();
+        });
+    }) ();
+
+    const setUpReturnBtn = (() => {
+        const return_btn = document.querySelector("#return");
+        return_btn.addEventListener('click', () => {
+            getPlayer();
+            initGame();
+            DisplayController.displayMenuScreen();
+            DisplayController.resetInputField();
+        })
     }) ();
 
     const initGame = () => {

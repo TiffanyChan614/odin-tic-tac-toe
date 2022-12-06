@@ -13,13 +13,17 @@
         <div class="menu">
             <h1>Tic Tac Toe</h1>
             <label for="player1-name">Player 1: </label>
-            <input type="text" id="player1-name" placeholder="Player 1 Name">
+            <input type="text" id="player1-name" value="Player 1" required>
             <label for="player2-name">Player 2: </label>
-            <input type="text" id="player2-name" placeholder="Player 2 Name">
+            <input type="text" id="player2-name" value="Player 2" required>
             <button type="button" id="start">Start</button>
     </div>
         <div class="game-screen">
             <div class="board">
+            </div>
+            <div class="controls">
+                <button type="button" id="reset">Reset</button>
+                <button type="button" id="return">Return</button>
             </div>
         </div>
         <div class="end-screen">
