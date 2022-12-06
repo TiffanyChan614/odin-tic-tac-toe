@@ -6,12 +6,14 @@ const GameBoard = (() => {
 
     const getBoard = () => board;
 
+    const isEmpty = (row, col) => board[row][col] === '';
+
     const checkRowWin = () => {
         let isWin;
         for (let i = 0; i < board.length; i++) {
             isWin = true;
             for (let j = 0; j < board[i].length - 1; j++) {
-                if (board[i][j] !== board[i][j+1] || board[i][j] === '') {
+                if (board[i][j] !== board[i][j+1] || isEmpty(i, j)) {
                     isWin = false;
                 }
             }
@@ -27,7 +29,7 @@ const GameBoard = (() => {
         for (let i = 0; i < board[0].length; i++) {
             isWin = true;
             for (let j = 0; j < board.length - 1; j++) {
-                if (board[j][i] !== board[j+1][i] || board[j][i] === '') {
+                if (board[j][i] !== board[j+1][i] || isEmpty(j, i)) {
                     isWin = false;
                 }
             }
@@ -41,7 +43,7 @@ const GameBoard = (() => {
     const checkDiagWin = () => {
         let isWin = true;
         for (let i = 0; i < board.length - 1; i++) {
-            if (board[i][i] !== board[i+1][i+1] || board[i][i] === '') {
+            if (board[i][i] !== board[i+1][i+1] || isEmpty(i, i)) {
                 isWin = false;
             }
         }
@@ -51,7 +53,7 @@ const GameBoard = (() => {
 
         isWin = true;
         for(let i = 0; i < board.length - 1; i++) {
-            if (board[board.length-1-i][i] !== board[board.length-2-i][i+1] || board[board.length-1-i][i] === '') {
+            if (board[board.length-1-i][i] !== board[board.length-2-i][i+1] || isEmpty(board.length-1-i, i)) {
                 isWin = false;
             }
         }
@@ -128,7 +130,7 @@ const GameFlow = (() => {
             GameBoard.getBoard()[row][col] = curr_player.getMark();
             e.target.textContent = curr_player.getMark();
             DisplayController.displayBoard(GameBoard.getBoard());
-            if (GameBoard.checkRowWin() || GameBoard.checkColWin() || GameBoard.checkDiagWin()){
+            if (GameBoard.checkWin()){
                 console.log(curr_player.getName() + " wins");
             }
             else {
