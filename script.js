@@ -6,6 +6,8 @@ const GameBoard = (() => {
 
     const getBoard = () => board;
 
+    const setBoard = (row, col, mark) => board[row][col] = mark;
+
     const isEmpty = (row, col) => board[row][col] === '';
 
     const checkRowWin = () => {
@@ -67,7 +69,7 @@ const GameBoard = (() => {
         return checkRowWin() || checkColWin() || checkDiagWin();
     }
 
-    return {getBoard, checkWin};
+    return {getBoard, setBoard, checkWin, isEmpty};
 
 }) ();
 
@@ -100,7 +102,11 @@ const DisplayController = (() => {
         return id.replace(/[^0-9]/g, '');
     };
 
-    return {displayBoard, generateBoard, getCellNum};
+    const fillCell = (cell_elem, mark) => {
+        cell_elem.textContent = mark;
+    }
+
+    return {displayBoard, generateBoard, getCellNum, fillCell};
 }) ();
 
 // Player factory
@@ -126,9 +132,9 @@ const GameFlow = (() => {
         let cell_num = DisplayController.getCellNum(e.target);
         let row = cell_num[0];
         let col = cell_num[1];
-        if (GameBoard.getBoard()[row][col] === '') {
-            GameBoard.getBoard()[row][col] = curr_player.getMark();
-            e.target.textContent = curr_player.getMark();
+        if (GameBoard.isEmpty(row, col)) {
+            GameBoard.setBoard(row, col, curr_player.getMark());
+            DisplayController.fillCell(e.target, curr_player.getMark());
             DisplayController.displayBoard(GameBoard.getBoard());
             if (GameBoard.checkWin()){
                 console.log(curr_player.getName() + " wins");
