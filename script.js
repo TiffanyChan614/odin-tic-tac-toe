@@ -4,78 +4,88 @@ const GameBoard = (() => {
                 ['', '', ''],
                 ['', '', '']];
 
+    const initBoard = () => {
+        board = [['', '', ''],
+                ['', '', ''],
+                ['', '', '']];
+    };
+
     const getBoard = () => board;
 
-    const setBoard = (row, col, mark) => board[row][col] = mark;
+    const setCell = (row, col, mark) => board[row][col] = mark;
 
     const isEmpty = (row, col) => board[row][col] === '';
 
     const checkRowWin = () => {
-        let isWin;
+        let is_win;
         for (let i = 0; i < board.length; i++) {
-            isWin = true;
+            is_win = true;
             for (let j = 0; j < board[i].length - 1; j++) {
                 if (board[i][j] !== board[i][j+1] || isEmpty(i, j)) {
-                    isWin = false;
+                    is_win = false;
                 }
             }
-            if (isWin) {
-                return isWin;
+            if (is_win) {
+                return is_win;
             }
         }
         return false;
     };
 
     const checkColWin = () => {
-        let isWin;
+        let is_win;
         for (let i = 0; i < board[0].length; i++) {
-            isWin = true;
+            is_win = true;
             for (let j = 0; j < board.length - 1; j++) {
                 if (board[j][i] !== board[j+1][i] || isEmpty(j, i)) {
-                    isWin = false;
+                    is_win = false;
                 }
             }
-            if (isWin) {
-                return isWin;
+            if (is_win) {
+                return is_win;
             }
         }
         return false;
-    }
+    };
 
     const checkDiagWin = () => {
-        let isWin = true;
+        let is_win = true;
         for (let i = 0; i < board.length - 1; i++) {
             if (board[i][i] !== board[i+1][i+1] || isEmpty(i, i)) {
-                isWin = false;
+                is_win = false;
             }
         }
-        if (isWin) {
-            return isWin;
+        if (is_win) {
+            return is_win;
         }
 
-        isWin = true;
+        is_win = true;
         for(let i = 0; i < board.length - 1; i++) {
             if (board[board.length-1-i][i] !== board[board.length-2-i][i+1] || isEmpty(board.length-1-i, i)) {
-                isWin = false;
+                is_win = false;
             }
         }
-        if (isWin) {
-            return isWin;
+        if (is_win) {
+            return is_win;
         }
         return false;
-    }
+    };
 
     const checkWin = () => {
         return checkRowWin() || checkColWin() || checkDiagWin();
-    }
+    };
 
-    return {getBoard, setBoard, checkWin, isEmpty};
+    return {initBoard, getBoard, setBoard: setCell, checkWin, isEmpty};
 
 }) ();
 
 // DisplayController module
 const DisplayController = (() => {
     const board_elem = document.querySelector(".board");
+    const game_screen = document.querySelector(".game-screen");
+    const menu = document.querySelector(".menu");
+    const end_screen = document.querySelector(".end-screen");
+    const winner_msg = document.querySelector(".winner");
 
     const displayBoard = (board) => {
         for (let i = 0; i < board.length; i++) {
@@ -84,9 +94,10 @@ const DisplayController = (() => {
                 cell.textContent = board[i][j];
             }
         }
-    }
+    };
 
-    const generateBoard = (board) => {
+    const generateBoard = (() => {
+        let board = GameBoard.getBoard();
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board[i].length; j++) {
                 const cell_elem = document.createElement("div");
@@ -95,7 +106,7 @@ const DisplayController = (() => {
                 board_elem.appendChild(cell_elem);
             }
         }
-    }
+    }) ();
 
     const getCellNum = (cell_elem) => {
         let id = cell_elem.id;
@@ -104,9 +115,28 @@ const DisplayController = (() => {
 
     const fillCell = (cell_elem, mark) => {
         cell_elem.textContent = mark;
-    }
+    };
 
-    return {displayBoard, generateBoard, getCellNum, fillCell};
+    const displayGameScreen = () => {
+        game_screen.style.display = "block";
+        menu.style.display = "none";
+        end_screen.style.display = "none";
+        displayBoard(GameBoard.getBoard());
+    };
+
+    const displayMenuScreen = () => {
+        menu.style.display = "block";
+        game_screen.style.display = "none";
+        end_screen.style.display = "none";
+    };
+
+    const displayEndScreen = (winner) => {
+        end_screen.style.display = "block";
+        winner_msg.textContent = winner.getName() + " wins!";
+    };
+
+    return {displayBoard, generateBoard, getCellNum, fillCell,
+        displayGameScreen, displayMenuScreen, displayEndScreen};
 }) ();
 
 // Player factory
@@ -118,17 +148,15 @@ const Player = (name, mark) => {
 
 // GameFlow module
 const GameFlow = (() => {
-    let player1 = Player("Tiff", 'X');
-    let player2 = Player("Anson", 'O');
-    let curr_player = player1;
+    let player1, player2, curr_player;
 
     const move = () => {
         const cells = document.querySelectorAll(".cell");
         Array.from(cells).forEach(cell =>
-            cell.addEventListener('click', clickEventHandler));
+            cell.addEventListener('click', cellEventHandler));
     };
 
-    const clickEventHandler = (e) => {
+    const cellEventHandler = (e) => {
         let cell_num = DisplayController.getCellNum(e.target);
         let row = cell_num[0];
         let col = cell_num[1];
@@ -137,7 +165,7 @@ const GameFlow = (() => {
             DisplayController.fillCell(e.target, curr_player.getMark());
             DisplayController.displayBoard(GameBoard.getBoard());
             if (GameBoard.checkWin()){
-                console.log(curr_player.getName() + " wins");
+                DisplayController.displayEndScreen(curr_player);
             }
             else {
                 curr_player = switchPlayer(curr_player);
@@ -145,12 +173,42 @@ const GameFlow = (() => {
         }
     };
 
+    const setUpStartBtn = (() => {
+        const start_btn = document.querySelector("#start");
+        start_btn.addEventListener('click', () => {
+            initGame();
+            DisplayController.displayGameScreen();
+        })
+    }) ();
+
+    const setUpNewRoundBtn = (() => {
+        const new_round_btn = document.querySelector("#new-round");
+        new_round_btn.addEventListener('click', () => {
+            initGame();
+            DisplayController.displayGameScreen();
+        })
+    }) ();
+
+    const setUpNewGameBtn = (() => {
+        const new_game_btn = document.querySelector("#new-game");
+        new_game_btn.addEventListener('click', () => {
+            initGame();
+            DisplayController.displayMenuScreen();
+        });
+    }) ();
+
+    const initGame = () => {
+        player1 = Player("Tiff", 'X');
+        player2 = Player("Anson", 'O');
+        curr_player = player1;
+        GameBoard.initBoard();
+    }
+
     const switchPlayer = (curr_player) => {
         return curr_player === player1? player2 : player1;
     }
 
-    DisplayController.generateBoard(GameBoard.getBoard());
-    DisplayController.displayBoard(GameBoard.getBoard());
+
     move();
 
 }) ();
