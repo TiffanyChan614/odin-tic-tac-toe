@@ -36,10 +36,32 @@ const GameBoard = (() => {
             }
         }
         return false;
-
     }
 
-    return {getBoard, checkRowWin, checkColWin};
+    const checkDiagWin = () => {
+        let isWin = true;
+        for (let i = 0; i < board.length - 1; i++) {
+            if (board[i][i] !== board[i+1][i+1] || board[i][i] === '') {
+                isWin = false;
+            }
+        }
+        if (isWin) {
+            return isWin;
+        }
+
+        isWin = true;
+        for(let i = 0; i < board.length - 1; i++) {
+            if (board[board.length-1-i][i] !== board[board.length-2-i][i+1] || board[board.length-1-i][i] === '') {
+                isWin = false;
+            }
+        }
+        if (isWin) {
+            return isWin;
+        }
+        return false;
+    }
+
+    return {getBoard, checkRowWin, checkColWin, checkDiagWin};
 
 }) ();
 
@@ -87,7 +109,6 @@ const GameFlow = (() => {
     let player1 = Player("Tiff", 'X');
     let player2 = Player("Anson", 'O');
     let curr_player = player1;
-    let win = false;
 
     const move = () => {
         const cells = document.querySelectorAll(".cell");
@@ -103,7 +124,7 @@ const GameFlow = (() => {
             GameBoard.getBoard()[row][col] = curr_player.getMark();
             e.target.textContent = curr_player.getMark();
             DisplayController.displayBoard(GameBoard.getBoard());
-            if (GameBoard.checkRowWin() || GameBoard.checkColWin()){
+            if (GameBoard.checkRowWin() || GameBoard.checkColWin() || GameBoard.checkDiagWin()){
                 console.log(curr_player.getName() + " wins");
             }
             else {
