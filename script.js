@@ -16,6 +16,17 @@ const GameBoard = (() => {
 
     const isEmpty = (row, col) => board[row][col] === '';
 
+    const checkBoardFull = () => {
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length; j++) {
+                if (board[i][j] === '') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     const checkRowWin = () => {
         let is_win;
         for (let i = 0; i < board.length; i++) {
@@ -75,7 +86,7 @@ const GameBoard = (() => {
         return checkRowWin() || checkColWin() || checkDiagWin();
     };
 
-    return {initBoard, getBoard, setBoard: setCell, checkWin, isEmpty};
+    return {initBoard, getBoard, setBoard: setCell, checkWin, isEmpty, checkBoardFull};
 
 }) ();
 
@@ -85,7 +96,7 @@ const DisplayController = (() => {
     const game_screen = document.querySelector(".game-screen");
     const menu = document.querySelector(".menu");
     const end_screen = document.querySelector(".end-screen");
-    const winner_msg = document.querySelector(".winner");
+    const end_msg = document.querySelector(".end-msg");
 
     const displayBoard = (board) => {
         for (let i = 0; i < board.length; i++) {
@@ -130,9 +141,14 @@ const DisplayController = (() => {
         end_screen.style.display = "none";
     };
 
-    const displayEndScreen = (winner) => {
+    const displayEndScreen = (result, winner) => {
         end_screen.style.display = "block";
-        winner_msg.textContent = winner.getName() + " wins!";
+        if (result === 'w') {
+            end_msg.textContent = winner.getName() + " wins!";
+        }
+        else {
+            end_msg.textContent = "It's a draw!";
+        }
     };
 
     const resetInputField = () => {
@@ -171,8 +187,11 @@ const GameFlow = (() => {
             GameBoard.setBoard(row, col, curr_player.getMark());
             DisplayController.fillCell(e.target, curr_player.getMark());
             DisplayController.displayBoard(GameBoard.getBoard());
-            if (GameBoard.checkWin()){
-                DisplayController.displayEndScreen(curr_player);
+            if (GameBoard.checkWin()) {
+                DisplayController.displayEndScreen('w', curr_player);
+            }
+            else if (GameBoard.checkBoardFull()) {
+                DisplayController.displayEndScreen('d');
             }
             else {
                 curr_player = switchPlayer(curr_player);
