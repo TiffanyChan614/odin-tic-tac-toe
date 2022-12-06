@@ -61,7 +61,11 @@ const GameBoard = (() => {
         return false;
     }
 
-    return {getBoard, checkRowWin, checkColWin, checkDiagWin};
+    const checkWin = () => {
+        return checkRowWin() || checkColWin() || checkDiagWin();
+    }
+
+    return {getBoard, checkWin};
 
 }) ();
 
