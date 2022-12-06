@@ -1,27 +1,45 @@
 // GameBoard module
 const GameBoard = (() => {
-    let board = [['X', 'X', 'O'],
-                ['', '', 'O'],
-                ['', 'O', '']];
+    let board = [['', '', ''],
+                ['', '', ''],
+                ['', '', '']];
 
     const getBoard = () => board;
 
     const checkRowWin = () => {
+        let isWin;
         for (let i = 0; i < board.length; i++) {
+            isWin = true;
             for (let j = 0; j < board[i].length - 1; j++) {
-                if (board[i][j] !== board[i][j+1]) {
-                    return false;
+                if (board[i][j] !== board[i][j+1] || board[i][j] === '') {
+                    isWin = false;
                 }
             }
-            return true;
+            if (isWin) {
+                return isWin;
+            }
         }
+        return false;
     };
 
-    // const checkColWin = () => {
+    const checkColWin = () => {
+        let isWin;
+        for (let i = 0; i < board[0].length; i++) {
+            isWin = true;
+            for (let j = 0; j < board.length - 1; j++) {
+                if (board[j][i] !== board[j+1][i] || board[j][i] === '') {
+                    isWin = false;
+                }
+            }
+            if (isWin) {
+                return isWin;
+            }
+        }
+        return false;
 
-    // }
+    }
 
-    return {getBoard, checkRowWin};
+    return {getBoard, checkRowWin, checkColWin};
 
 }) ();
 
@@ -69,25 +87,28 @@ const GameFlow = (() => {
     let player1 = Player("Tiff", 'X');
     let player2 = Player("Anson", 'O');
     let curr_player = player1;
-    let cell_clicked;
+    let win = false;
 
     const move = () => {
         const cells = document.querySelectorAll(".cell");
         Array.from(cells).forEach(cell =>
-            cell.addEventListener('click', (e) => {clickEventHandler(e)}), {once: true});
+            cell.addEventListener('click', clickEventHandler));
     };
 
     const clickEventHandler = (e) => {
-        console.log('click', e.target);;
         let cell_num = DisplayController.getCellNum(e.target);
         let row = cell_num[0];
         let col = cell_num[1];
         if (GameBoard.getBoard()[row][col] === '') {
-            cell_clicked = true;
             GameBoard.getBoard()[row][col] = curr_player.getMark();
             e.target.textContent = curr_player.getMark();
             DisplayController.displayBoard(GameBoard.getBoard());
-            curr_player = switchPlayer(curr_player);
+            if (GameBoard.checkRowWin() || GameBoard.checkColWin()){
+                console.log(curr_player.getName() + " wins");
+            }
+            else {
+                curr_player = switchPlayer(curr_player);
+            }
         }
     };
 
