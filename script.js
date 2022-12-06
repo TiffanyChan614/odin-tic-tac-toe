@@ -135,8 +135,15 @@ const DisplayController = (() => {
         winner_msg.textContent = winner.getName() + " wins!";
     };
 
-    return {displayBoard, generateBoard, getCellNum, fillCell,
-        displayGameScreen, displayMenuScreen, displayEndScreen};
+    const resetInputField = () => {
+        const input_fields = document.querySelectorAll("input");
+        for (let field of input_fields) {
+            field.value = "";
+        }
+    }
+
+    return {displayBoard, getCellNum, fillCell, displayGameScreen,
+        displayMenuScreen, displayEndScreen, resetInputField};
 }) ();
 
 // Player factory
@@ -176,8 +183,10 @@ const GameFlow = (() => {
     const setUpStartBtn = (() => {
         const start_btn = document.querySelector("#start");
         start_btn.addEventListener('click', () => {
+            getPlayer();
             initGame();
             DisplayController.displayGameScreen();
+            DisplayController.resetInputField();
         })
     }) ();
 
@@ -192,22 +201,28 @@ const GameFlow = (() => {
     const setUpNewGameBtn = (() => {
         const new_game_btn = document.querySelector("#new-game");
         new_game_btn.addEventListener('click', () => {
-            initGame();
+            getPlayer();
+            initGame()
             DisplayController.displayMenuScreen();
+            DisplayController.resetInputField();
         });
     }) ();
 
     const initGame = () => {
-        player1 = Player("Tiff", 'X');
-        player2 = Player("Anson", 'O');
         curr_player = player1;
         GameBoard.initBoard();
+    }
+
+    const getPlayer = () => {
+        const player1_name = document.querySelector("#player1-name");
+        const player2_name = document.querySelector("#player2-name");
+        player1 = Player(player1_name.value, 'X');
+        player2 = Player(player2_name.value, 'O');
     }
 
     const switchPlayer = (curr_player) => {
         return curr_player === player1? player2 : player1;
     }
-
 
     move();
 

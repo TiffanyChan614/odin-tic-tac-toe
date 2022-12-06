@@ -12,13 +12,18 @@
     <main>
         <div class="menu">
             <h1>Tic Tac Toe</h1>
+            <label for="player1-name">Player 1: </label>
+            <input type="text" id="player1-name" placeholder="Player 1 Name">
+            <label for="player2-name">Player 2: </label>
+            <input type="text" id="player2-name" placeholder="Player 2 Name">
             <button type="button" id="start">Start</button>
-        </div>
+    </div>
         <div class="game-screen">
             <div class="board">
             </div>
         </div>
         <div class="end-screen">
+            <p class="congrats">Congratulations!</p>
             <p class="winner"></p>
             <button type="button" id="new-round">New Round</button>
             <button type="button" id="new-game">New Game</button>
