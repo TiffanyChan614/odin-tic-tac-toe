@@ -201,56 +201,55 @@ const GameFlow = (() => {
         }
     };
 
-    const setUpStartBtn = (() => {
-        const start_btn = document.querySelector("#start");
-        start_btn.addEventListener('click', () => {
-            getPlayer();
-            initGame();
-            DisplayController.displayGameScreen();
-            DisplayController.resetInputField();
-        })
-    }) ();
+    const anotherGame = () => {
+        getPlayer();
+        initGame();
+        DisplayController.displayMenuScreen();
+        DisplayController.resetInputField();
+    }
 
-    const setUpNewRoundBtn = (() => {
-        const new_round_btn = document.querySelector("#new-round");
-        new_round_btn.addEventListener('click', () => {
-            initGame();
-            DisplayController.displayGameScreen();
-        })
-    }) ();
+    const newGame = () => {
+        getPlayer();
+        initGame();
+        DisplayController.displayGameScreen();
+        DisplayController.resetInputField();
+    }
 
-    const setUpNewGameBtn = (() => {
-        const new_game_btn = document.querySelector("#new-game");
-        new_game_btn.addEventListener('click', () => {
-            getPlayer();
-            initGame()
-            DisplayController.displayMenuScreen();
-            DisplayController.resetInputField();
-        });
-    }) ();
-
-    const setUpResetBtn = (() => {
-        const reset_btn = document.querySelector("#reset");
-        reset_btn.addEventListener('click', () => {
-            initGame();
-            DisplayController.displayGameScreen();
-        });
-    }) ();
-
-    const setUpReturnBtn = (() => {
-        const return_btn = document.querySelector("#return");
-        return_btn.addEventListener('click', () => {
-            getPlayer();
-            initGame();
-            DisplayController.displayMenuScreen();
-            DisplayController.resetInputField();
-        })
-    }) ();
+    const newRound = () => {
+        initGame();
+        DisplayController.displayGameScreen();
+    }
 
     const initGame = () => {
         curr_player = player1;
         GameBoard.initBoard();
     }
+
+    const setUpStartBtn = (() => {
+        const start_btn = document.querySelector("#start");
+        start_btn.addEventListener('click', newGame);
+    }) ();
+
+    const setUpNewRoundBtn = (() => {
+        const new_round_btn = document.querySelector("#new-round");
+        new_round_btn.addEventListener('click', newRound);
+    }) ();
+
+    const setUpNewGameBtn = (() => {
+        const new_game_btn = document.querySelector("#new-game");
+        new_game_btn.addEventListener('click', anotherGame);
+    }) ();
+
+    const setUpResetBtn = (() => {
+        const reset_btn = document.querySelector("#reset");
+        reset_btn.addEventListener('click', newRound);
+    }) ();
+
+    const setUpReturnBtn = (() => {
+        const return_btn = document.querySelector("#return");
+        return_btn.addEventListener('click', anotherGame);
+    }) ();
+
 
     const getPlayer = () => {
         const player1_name = document.querySelector("#player1-name");
