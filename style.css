@@ -5,8 +5,13 @@
 }
 
 :root {
-    --black: #000000;
-    --white: #FFFFFF:
+    --black: #070b14;
+    --white: #ffffff;
+    --celticBlue: #2d6ade;
+    --blueberry: #4c8cf0;
+    --lightGray: #d8d8d8;
+    --gray: #d3d3d3;
+    --outerSpace: #464d5a;
 }
 
 html, body {
@@ -21,15 +26,30 @@ body {
     align-items: center;
     height: 100vh;
     gap: 5rem;
-    text-align: center;
 }
 
 main {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu, .game-screen, .end-screen {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+}
+
+h1 {
+    font-size: 3rem;
 }
 
 footer {
-    flex-shrink: 0
+    flex-shrink: 0;
+    font-size: 0.8rem;
 }
 
 .advanced-setting > div {
@@ -55,6 +75,93 @@ footer {
     border: 1px solid blue;
 }
 
-.selected {
-    background-color: grey;
+.basic-setting {
+    display: flex;
+    gap: 1rem;
+}
+
+.basic-setting button, .submit button {
+    background-color: var(--blueberry);
+    color: var(--white);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.2rem;
+    font-size: 1rem;
+}
+
+.basic-setting button:hover, .submit button:hover {
+    background-color: var(--celticBlue);
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.advanced-setting {
+    display: none;
+    border: 0.15rem solid var(--celticBlue);
+    border-radius: 0 0 0.2rem 0.2rem;
+    padding: 1rem;
+}
+
+.two-players-setting, .two-players-setting > div, .one-player-setting {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+.player-title {
+    font-size: 1.1rem;
+}
+
+.basic-setting button.selected {
+    background-color: var(--celticBlue);
+}
+
+.basic-setting .selected {
+    border-radius: 0.2rem 0.2rem 0 0;
+}
+
+input {
+    width: 90%;
+    border: 0.15rem solid var(--gray);
+    padding: 0.2rem 0.5rem;
+    height: 1.8rem;
+    font-size: 0.9rem;
+    border-radius: 0.2rem;
+}
+
+.mark-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.mark-field p {
+    margin-bottom: 0.5rem;
+}
+
+.mark-field button {
+    width: 13vw;
+    height: 13vw;
+    font-size: 2rem;
+    border: none;
+    background-color: var(--white);
+}
+
+.mark-field button:hover, .mark-field .selected {
+    background-color: var(--lightGray);
+    border-radius: 0.2rem;
+}
+
+.line-break {
+    background-color: var(--gray);
+    height: 0.1rem;
+    width: 80%;
+}
+
+#start {
+    width: 100%;
 }

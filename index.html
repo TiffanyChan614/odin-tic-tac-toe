@@ -20,36 +20,62 @@
                 <div class="advanced-setting">
                     <div class="two-players-setting">
                         <div class="player-1-setting">
-                            <label for="player1-name">Player 1: </label>
-                            <input type="text" id="player1-name" value="Player 1" required>
-                            <p>Choose your mark:</p>
-                            <button type="button" class="player1-mark-btn" id="player1-x-mark">X</button>
-                            <button type="button" class="player1-mark-btn" id="player1-o-mark">O</button>
+                            <p class="player-title">Player 1:</p>
+                            <div class="name-field">
+                                <label for="player1-name">Enter your name:</label>
+                                <input type="text" id="player1-name" value="Player 1" required>
+                            </div>
+                            <div class="mark-field">
+                                <p>Choose your mark:</p>
+                                <div class="mark-buttons">
+                                    <button type="button" class="player1-mark-btn" id="player1-x-mark">X</button>
+                                    <button type="button" class="player1-mark-btn" id="player1-o-mark">O</button>
+                                </div>
+                            </div>
                         </div>
+                        <div class="line-break"> </div>
                         <div class="player-2-setting">
-                            <label for="player2-name">Player 2: </label>
-                            <input type="text" id="player2-name" value="Player 2" required>
-                            <p>Choose your mark:</p>
-                            <button type="button" class="player2-mark-btn" id="player2-x-mark">X</button>
-                            <button type="button" class="player2-mark-btn" id="player2-o-mark">O</button>
+                            <p class="player-title">Player 2:</p>
+                            <div class="name-field">
+                                <label for="player2-name">Enter your name:</label>
+                                <input type="text" id="player2-name" value="Player 2" required>
+                            </div>
+                            <div class="mark-field">
+                                <p>Choose your mark:</p>
+                                <div class="mark-buttons">
+                                    <button type="button" class="player2-mark-btn" id="player2-x-mark">X</button>
+                                    <button type="button" class="player2-mark-btn" id="player2-o-mark">O</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="one-player-setting">
-                        <label for="player-name">Player:</label>
-                        <input type="text" id="player-name" value="Player" required>
-                        <p>Choose your mark:</p>
-                        <button type="button" class="mark-btn" id="x-mark">X</button>
-                        <button type="button" class="mark-btn" id="o-mark">O</button>
-                        <p>Difficulty:</p>
-                        <button type="button" class="difficulty-btn" id=easy-ai">Easy</button>
-                        <button type="button" class="difficulty-btn" id="medium-ai">Medium</button>
-                        <button type="button" class="difficulty-btn" id="hard-ai">Hard</button>
+                        <div class="name-field">
+                            <label for="player-name">Enter your name:</label>
+                            <input type="text" id="player-name" value="Player" required>
+                        </div>
+                        <div class="mark-field">
+                            <p>Choose your mark:</p>
+                            <div class="mark-buttons">
+                                <button type="button" class="mark-btn" id="x-mark">X</button>
+                                <button type="button" class="mark-btn" id="o-mark">O</button>
+                            </div>
+                        </div>
+                        <div class="difficult">
+                            <p>Difficulty:</p>
+                            <button type="button" class="difficulty-btn" id="easy-ai">Easy</button>
+                            <button type="button" class="difficulty-btn" id="medium-ai">Medium</button>
+                            <button type="button" class="difficulty-btn" id="hard-ai">Hard</button>
+                        </div>
                     </div>
                 </div>
             </div>
-            <button type="button" id="start">Start</button>
+            <div class="submit">
+                <button type="button" id="start">Start</button>
+            </div>
         </div>
         <div class="game-screen">
+            <h1>Tic Tac Toe</h1>
             <div class="board">
             </div>
             <div class="controls">
