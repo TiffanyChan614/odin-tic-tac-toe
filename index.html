@@ -12,12 +12,30 @@
     <main>
         <div class="menu">
             <h1>Tic Tac Toe</h1>
-            <label for="player1-name">Player 1: </label>
-            <input type="text" id="player1-name" value="Player 1" required>
-            <label for="player2-name">Player 2: </label>
-            <input type="text" id="player2-name" value="Player 2" required>
+            <div class="setting">
+                <div class="basic-setting">
+                    <button type="button" class="play-mode-btn" id="two-players">Player VS Player</button>
+                    <button type="button" class=play-mode-btn id="one-player">Player VS AI</button>
+                </div>
+                <div class="advanced-setting">
+                    <div class="two-players-setting">
+                        <label for="player1-name">Player 1: </label>
+                        <input type="text" id="player1-name" value="Player 1" required>
+                        <label for="player2-name">Player 2: </label>
+                        <input type="text" id="player2-name" value="Player 2" required>
+                    </div>
+                    <div class="one-player-setting">
+                        <label for="player-name">Player:</label>
+                        <input type="text" id="player-name" value="Player" required>
+                        <p>Difficulty:</p>
+                        <button type="button" class="difficulty-btn" id=easy-ai">Easy</button>
+                        <button type="button" class="difficulty-btn" id="medium-ai">Medium</button>
+                        <button type="button" class="difficulty-btn" id="hard-ai">Hard</button>
+                    </div>
+                </div>
+            </div>
             <button type="button" id="start">Start</button>
-    </div>
+        </div>
         <div class="game-screen">
             <div class="board">
             </div>

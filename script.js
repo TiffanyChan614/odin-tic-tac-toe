@@ -98,6 +98,8 @@ const DisplayController = (() => {
     const end_screen = document.querySelector(".end-screen");
     const end_msg = document.querySelector(".end-msg");
     const controls = document.querySelector(".controls");
+    const two_players_setting = document.querySelector(".two-players-setting");
+    const one_player_setting = document.querySelector(".one-player-setting");
 
     const displayBoard = (board) => {
         for (let i = 0; i < board.length; i++) {
@@ -153,6 +155,16 @@ const DisplayController = (() => {
         }
     };
 
+    const displayTwoPlayersSetting = () => {
+        two_players_setting.style.display = "block";
+        one_player_setting.style.display = "none";
+    }
+
+    const displayOnePlayerSetting = () => {
+        two_players_setting.style.display = "none";
+        one_player_setting.style.display = "block";
+    }
+
     const resetInputField = () => {
         const player1_name = document.querySelector("#player1-name");
         const player2_name = document.querySelector("#player2-name");
@@ -161,7 +173,7 @@ const DisplayController = (() => {
     }
 
     return {displayBoard, getCellNum, fillCell, displayGameScreen,
-        displayMenuScreen, displayEndScreen, resetInputField};
+        displayMenuScreen, displayEndScreen, displayTwoPlayersSetting, displayOnePlayerSetting, resetInputField};
 }) ();
 
 // Player factory
@@ -173,7 +185,7 @@ const Player = (name, mark) => {
 
 // GameFlow module
 const GameFlow = (() => {
-    let player1, player2, curr_player;
+    let player1, player2, curr_player, game_mode;
 
     const move = () => {
         const cells = document.querySelectorAll(".cell");
@@ -206,10 +218,17 @@ const GameFlow = (() => {
     }
 
     const getPlayer = () => {
-        const player1_name = document.querySelector("#player1-name");
-        const player2_name = document.querySelector("#player2-name");
-        player1 = Player(player1_name.value, 'X');
-        player2 = Player(player2_name.value, 'O');
+        if (game_mode == 2) {
+            const player1_name = document.querySelector("#player1-name");
+            const player2_name = document.querySelector("#player2-name");
+            player1 = Player(player1_name.value, 'X');
+            player2 = Player(player2_name.value, 'O');
+        }
+        else if (game_mode == 1) {
+            const player_name = document.querySelector("#player-name");
+            player1 = Player(player_name.value, 'X');
+            player2 = Player("Computer", 'O');
+        }
     }
 
     const anotherGame = () => {
@@ -259,6 +278,31 @@ const GameFlow = (() => {
     const setUpReturnBtn = (() => {
         const return_btn = document.querySelector("#return");
         return_btn.addEventListener('click', anotherGame);
+    }) ();
+
+    const setUpPlayerMode = (() => {
+        const two_players_btn = document.querySelector("#two-players");
+        const one_player_btn = document.querySelector("#one-player");
+        two_players_btn.addEventListener('click', () => {
+            if (game_mode != 2) {
+                game_mode = 2;
+                two_players_btn.classList.add("selected");
+                DisplayController.displayTwoPlayersSetting();
+                if (one_player_btn.classList.contains("selected")) {
+                    one_player_btn.classList.remove("selected");
+                }
+            }
+        });
+        one_player_btn.addEventListener('click', () => {
+            if (game_mode != 1) {
+                game_mode = 1;
+                one_player_btn.classList.add("selected");
+                DisplayController.displayOnePlayerSetting();
+                if (two_players_btn.classList.contains("selected")) {
+                    two_players_btn.classList.remove("selected");
+                }
+            }
+        })
     }) ();
 
     move();
