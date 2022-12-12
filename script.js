@@ -175,7 +175,7 @@ const DisplayController = (() => {
     const resetInputField = () => {
         player1_name.value = "Player 1";
         player2_name.value = "Player 2";
-        player_name.value = "player";
+        player_name.value = "Player";
     }
 
     const clearSelectedClass = () => {
@@ -253,6 +253,7 @@ const GameFlow = (() => {
 
     const anotherGame = () => {
         if (getPlayer()) {
+            initSetting();
             initGame();
             DisplayController.displayMenuScreen();
             DisplayController.resetInputField();
@@ -272,6 +273,14 @@ const GameFlow = (() => {
     const newRound = () => {
         initGame();
         DisplayController.displayGameScreen();
+    }
+
+    const initSetting = () => {
+        player1 = undefined;
+        player2 = undefined;
+        player1_mark = undefined;
+        player2_mark = undefined;
+        game_mode = undefined;
     }
 
     const initGame = () => {
@@ -304,7 +313,7 @@ const GameFlow = (() => {
         return_btn.addEventListener('click', anotherGame);
     }) ();
 
-    const setUpPlayerMode = (() => {
+    const setUpGameMode = (() => {
         const two_players_btn = document.querySelector("#two-players");
         const one_player_btn = document.querySelector("#one-player");
         two_players_btn.addEventListener('click', () => {
