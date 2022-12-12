@@ -168,8 +168,10 @@ const DisplayController = (() => {
     const resetInputField = () => {
         const player1_name = document.querySelector("#player1-name");
         const player2_name = document.querySelector("#player2-name");
+        const player_name = document.querySelector("#player-name");
         player1_name.value = "Player 1";
         player2_name.value = "Player 2";
+        player_name.value = "player";
     }
 
     return {displayBoard, getCellNum, fillCell, displayGameScreen,
@@ -185,13 +187,7 @@ const Player = (name, mark) => {
 
 // GameFlow module
 const GameFlow = (() => {
-    let player1, player2, curr_player, game_mode;
-
-    const move = () => {
-        const cells = document.querySelectorAll(".cell");
-        Array.from(cells).forEach(cell =>
-            cell.addEventListener('click', cellEventHandler));
-    };
+    let player1, player2, curr_player, game_mode, player1_mark, player2_mark;
 
     const cellEventHandler = (e) => {
         let cell_num = DisplayController.getCellNum(e.target);
@@ -217,17 +213,23 @@ const GameFlow = (() => {
         return curr_player === player1? player2 : player1;
     }
 
+    const move = (() => {
+        const cells = document.querySelectorAll(".cell");
+        Array.from(cells).forEach(cell =>
+            cell.addEventListener('click', cellEventHandler));
+    }) ();
+
     const getPlayer = () => {
         if (game_mode == 2) {
             const player1_name = document.querySelector("#player1-name");
             const player2_name = document.querySelector("#player2-name");
-            player1 = Player(player1_name.value, 'X');
-            player2 = Player(player2_name.value, 'O');
+            player1 = Player(player1_name.value, player1_mark);
+            player2 = Player(player2_name.value, player2_mark);
         }
         else if (game_mode == 1) {
             const player_name = document.querySelector("#player-name");
-            player1 = Player(player_name.value, 'X');
-            player2 = Player("Computer", 'O');
+            player1 = Player(player_name.value, player1_mark);
+            player2 = Player("Computer", player2_mark);
         }
     }
 
@@ -305,6 +307,55 @@ const GameFlow = (() => {
         })
     }) ();
 
-    move();
+    const toggleMark = (btn1, btn2) => {
+        btn1.classList.add("selected");
+        if (btn2.classList.contains("selected")) {
+            btn2.classList.remove("selected");
+        }
+    }
+
+    const setUpOnePlayerMark = (() => {
+        const x_mark_btn = document.querySelector("#x-mark");
+        const o_mark_btn = document.querySelector("#o-mark");
+        x_mark_btn.addEventListener('click', () => {
+            player1_mark = 'X';
+            player2_mark = 'O';
+            toggleMark(x_mark_btn, o_mark_btn);
+        })
+        o_mark_btn.addEventListener('click', () => {
+            player1_mark = 'O';
+            player2_mark = 'X';
+            toggleMark(o_mark_btn, x_mark_btn);
+        })
+    }) ();
+
+    const setUpTwoPlayersMark = (() => {
+        const x_mark_btn1 = document.querySelector("#player1-x-mark");
+        const x_mark_btn2 = document.querySelector("#player2-x-mark");
+        const o_mark_btn1 = document.querySelector("#player1-o-mark");
+        const o_mark_btn2 = document.querySelector("#player2-o-mark");
+
+        const mark_variation1 = () => {
+            player1_mark = 'X';
+            player2_mark = 'O';
+            toggleMark(x_mark_btn1, o_mark_btn1);
+            toggleMark(o_mark_btn2, x_mark_btn2);
+        }
+
+        const mark_variation2 = () => {
+            player1_mark = 'O';
+            player2_mark = 'X';
+            toggleMark(o_mark_btn1, x_mark_btn1);
+            toggleMark(x_mark_btn2, o_mark_btn2);
+        }
+
+        x_mark_btn1.addEventListener('click', mark_variation1);
+
+        x_mark_btn2.addEventListener('click', mark_variation2);
+
+        o_mark_btn1.addEventListener('click', mark_variation2);
+
+        o_mark_btn2.addEventListener('click', mark_variation1);
+    }) ();
 
 }) ();
