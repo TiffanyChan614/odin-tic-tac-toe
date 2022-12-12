@@ -154,10 +154,10 @@ const DisplayController = (() => {
     };
 
     const resetInputField = () => {
-        const input_fields = document.querySelectorAll("input");
-        for (let field of input_fields) {
-            field.value = "";
-        }
+        const player1_name = document.querySelector("#player1-name");
+        const player2_name = document.querySelector("#player2-name");
+        player1_name.value = "Player 1";
+        player2_name.value = "Player 2";
     }
 
     return {displayBoard, getCellNum, fillCell, displayGameScreen,
@@ -200,6 +200,17 @@ const GameFlow = (() => {
             }
         }
     };
+
+    const switchPlayer = (curr_player) => {
+        return curr_player === player1? player2 : player1;
+    }
+
+    const getPlayer = () => {
+        const player1_name = document.querySelector("#player1-name");
+        const player2_name = document.querySelector("#player2-name");
+        player1 = Player(player1_name.value, 'X');
+        player2 = Player(player2_name.value, 'O');
+    }
 
     const anotherGame = () => {
         getPlayer();
@@ -249,18 +260,6 @@ const GameFlow = (() => {
         const return_btn = document.querySelector("#return");
         return_btn.addEventListener('click', anotherGame);
     }) ();
-
-
-    const getPlayer = () => {
-        const player1_name = document.querySelector("#player1-name");
-        const player2_name = document.querySelector("#player2-name");
-        player1 = Player(player1_name.value, 'X');
-        player2 = Player(player2_name.value, 'O');
-    }
-
-    const switchPlayer = (curr_player) => {
-        return curr_player === player1? player2 : player1;
-    }
 
     move();
 
