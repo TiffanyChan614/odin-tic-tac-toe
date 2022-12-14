@@ -104,12 +104,25 @@ const DisplayController = (() => {
     const player1_name = document.querySelector("#player1-name");
     const player2_name = document.querySelector("#player2-name");
     const player_name = document.querySelector("#player-name");
+    const player_turn = document.querySelector(".player-turn");
 
     const displayBoard = (board) => {
         for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board[i].length; j++) {
+            for (let j = 0; j < board.length; j++) {
                 const cell = document.querySelector(`#cell-${i}${j}`);
                 cell.textContent = board[i][j];
+                if (i === 0) {
+                    cell.style.borderTop = "none";
+                }
+                if (j === 0) {
+                    cell.style.borderLeft = "none";
+                }
+                if (i === board.length-1) {
+                    cell.style.borderBottom = "none";
+                }
+                if (j === board.length-1) {
+                    cell.style.borderRight = "none";
+                }
             }
         }
     };
@@ -160,6 +173,10 @@ const DisplayController = (() => {
         }
     };
 
+    const displayPlayer = (player) => {
+        player_turn.textContent = player.getName() + "'s turn!";
+    }
+
     const displayTwoPlayersSetting = () => {
         two_players_setting.style.display = "flex";
         one_player_setting.style.display = "none";
@@ -185,7 +202,7 @@ const DisplayController = (() => {
         }
     }
 
-    return {displayBoard, getCellNum, fillCell, displayGameScreen,
+    return {displayBoard, getCellNum, fillCell, displayPlayer, displayGameScreen,
         displayMenuScreen, displayEndScreen, displayTwoPlayersSetting,
         displayOnePlayerSetting, resetInputField, clearSelectedClass};
 }) ();
@@ -222,7 +239,9 @@ const GameFlow = (() => {
     };
 
     const switchPlayer = (curr_player) => {
-        return curr_player === player1? player2 : player1;
+        let next_player = curr_player === player1? player2 : player1;
+        DisplayController.displayPlayer(next_player);
+        return next_player;
     }
 
     const move = (() => {
@@ -255,6 +274,7 @@ const GameFlow = (() => {
         if (getPlayer()) {
             initSetting();
             initGame();
+            DisplayController.displayPlayer(player1);
             DisplayController.displayMenuScreen();
             DisplayController.resetInputField();
             DisplayController.clearSelectedClass();
@@ -264,6 +284,7 @@ const GameFlow = (() => {
     const newGame = () => {
         if (getPlayer()) {
             initGame();
+            DisplayController.displayPlayer(player1);
             DisplayController.displayGameScreen();
             DisplayController.resetInputField();
             DisplayController.clearSelectedClass();
@@ -272,6 +293,7 @@ const GameFlow = (() => {
 
     const newRound = () => {
         initGame();
+        DisplayController.displayPlayer(player1);
         DisplayController.displayGameScreen();
     }
 
