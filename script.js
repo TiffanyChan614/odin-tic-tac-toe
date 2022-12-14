@@ -111,6 +111,7 @@ const DisplayController = (() => {
     const player2_score = document.querySelector("#player2-score");
     const player1_display = document.querySelector("#player1-display");
     const player2_display = document.querySelector("#player2-display");
+    const overlay = document.querySelector(".overlay");
 
     const displayBoard = (board) => {
         for (let i = 0; i < board.length; i++) {
@@ -181,6 +182,7 @@ const DisplayController = (() => {
     };
 
     const displayMenuScreen = () => {
+        overlay.style.display = "none";
         menu.style.display = "flex";
         game_screen.style.display = "none";
         end_screen.style.display = "none";
@@ -188,6 +190,7 @@ const DisplayController = (() => {
     };
 
     const displayEndScreen = (result, winner) => {
+        overlay.style.display = "block";
         end_screen.style.display = "flex";
         controls.style.display = "none";
         if (result === 'w') {
@@ -374,9 +377,9 @@ const GameFlow = (() => {
         reset_btn.addEventListener('click', reset);
     }) ();
 
-    const setUpReturnBtn = (() => {
-        const return_btn = document.querySelector("#return");
-        return_btn.addEventListener('click', backToMenu);
+    const setUpEndGameBtn = (() => {
+        const end_game_btn = document.querySelector("#end-game");
+        end_game_btn.addEventListener('click', backToMenu);
     }) ();
 
     const setUpGameMode = (() => {
