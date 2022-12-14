@@ -105,6 +105,7 @@ const DisplayController = (() => {
     const player2_name = document.querySelector("#player2-name");
     const player_name = document.querySelector("#player-name");
     const player_turn = document.querySelector(".player-turn");
+    const round_p = document.querySelector(".round");
 
     const displayBoard = (board) => {
         for (let i = 0; i < board.length; i++) {
@@ -177,6 +178,10 @@ const DisplayController = (() => {
         player_turn.textContent = player.getName() + "'s turn!";
     }
 
+    const displayRound = (round) => {
+        round_p.textContent = "Round " + round;
+    }
+
     const displayTwoPlayersSetting = () => {
         two_players_setting.style.display = "flex";
         one_player_setting.style.display = "none";
@@ -202,8 +207,8 @@ const DisplayController = (() => {
         }
     }
 
-    return {displayBoard, getCellNum, fillCell, displayPlayer, displayGameScreen,
-        displayMenuScreen, displayEndScreen, displayTwoPlayersSetting,
+    return {displayBoard, getCellNum, fillCell, displayPlayer, displayRound,
+        displayGameScreen, displayMenuScreen, displayEndScreen, displayTwoPlayersSetting,
         displayOnePlayerSetting, resetInputField, clearSelectedClass};
 }) ();
 
@@ -217,6 +222,7 @@ const Player = (name, mark) => {
 // GameFlow module
 const GameFlow = (() => {
     let player1, player2, curr_player, game_mode, player1_mark, player2_mark;
+    let player1_score = 0, player2_score = 0, round = 1;
 
     const cellEventHandler = (e) => {
         let cell_num = DisplayController.getCellNum(e.target);
@@ -275,6 +281,7 @@ const GameFlow = (() => {
             initSetting();
             initGame();
             DisplayController.displayPlayer(player1);
+            DisplayController.displayRound(round);
             DisplayController.displayMenuScreen();
             DisplayController.resetInputField();
             DisplayController.clearSelectedClass();
@@ -285,6 +292,7 @@ const GameFlow = (() => {
         if (getPlayer()) {
             initGame();
             DisplayController.displayPlayer(player1);
+            DisplayController.displayRound(round);
             DisplayController.displayGameScreen();
             DisplayController.resetInputField();
             DisplayController.clearSelectedClass();
@@ -293,7 +301,9 @@ const GameFlow = (() => {
 
     const newRound = () => {
         initGame();
+        round++;
         DisplayController.displayPlayer(player1);
+        DisplayController.displayRound(round);
         DisplayController.displayGameScreen();
     }
 
@@ -303,6 +313,9 @@ const GameFlow = (() => {
         player1_mark = undefined;
         player2_mark = undefined;
         game_mode = undefined;
+        player1_score = 0;
+        player2_score = 0;
+        round = 1;
     }
 
     const initGame = () => {
