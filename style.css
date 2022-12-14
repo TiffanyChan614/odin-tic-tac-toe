@@ -41,6 +41,7 @@ main {
     flex-direction: column;
     text-align: center;
     gap: 2rem;
+    align-items: center;
 }
 
 h1 {
@@ -68,6 +69,7 @@ footer {
     display: grid;
     grid-template-rows: repeat(3, 10rem);
     grid-template-columns: repeat(3, 10rem);
+    justify-content: center;
     gap: 0;
 }
 
@@ -170,7 +172,7 @@ input {
 }
 
 #start {
-    width: 100%;
+    width: 19.5rem;
     border: 0.2rem solid var(--blueberry);
     background-color: var(--white);
     font-size: 1.5rem;
@@ -189,4 +191,28 @@ input {
 
 .round {
     font-size: 1.5rem;
+}
+
+.score-div {
+    border: 0.2rem solid var(--blueberry);
+    display: flex;
+    justify-content: space-between;
+    width: 96%;
+}
+
+.stat {
+    display: flex;
+    gap: 1rem;
+    font-size: 1.1rem;
+    width: 100%;
+}
+
+.display {
+    background-color: var(--blueberry);
+    color: var(--white);
+    padding: 0.4rem 1rem;
+}
+
+.score {
+    padding: 0.4rem 0.3rem;
 }

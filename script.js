@@ -106,6 +106,11 @@ const DisplayController = (() => {
     const player_name = document.querySelector("#player-name");
     const player_turn = document.querySelector(".player-turn");
     const round_p = document.querySelector(".round");
+    const score = document.querySelector(".score");
+    const player1_score = document.querySelector("#player1-score");
+    const player2_score = document.querySelector("#player2-score");
+    const player1_display = document.querySelector("#player1-display");
+    const player2_display = document.querySelector("#player2-display");
 
     const displayBoard = (board) => {
         for (let i = 0; i < board.length; i++) {
@@ -169,6 +174,7 @@ const DisplayController = (() => {
         controls.style.display = "none";
         if (result === 'w') {
             end_msg.textContent = winner.getName() + " wins!";
+            winner.setScore(winner.getScore() + 1);
         }
         else {
             end_msg.textContent = "It's a draw!";
@@ -181,6 +187,13 @@ const DisplayController = (() => {
 
     const displayRound = (round) => {
         round_p.textContent = "Round " + round;
+    }
+
+    const displayScore = (player1, player2) => {
+        player1_display.textContent = player1.getName();
+        player2_display.textContent = player2.getName();
+        player1_score.textContent = player1.getScore();
+        player2_score.textContent = player2.getScore();
     }
 
     const displayTwoPlayersSetting = () => {
@@ -208,7 +221,7 @@ const DisplayController = (() => {
         }
     }
 
-    return {displayBoard, getCellNum, fillCell, displayPlayer, displayRound,
+    return {displayBoard, getCellNum, fillCell, displayPlayer, displayRound, displayScore,
         displayGameScreen, displayMenuScreen, displayEndScreen, displayTwoPlayersSetting,
         displayOnePlayerSetting, resetInputField, clearSelectedClass};
 }) ();
@@ -217,13 +230,16 @@ const DisplayController = (() => {
 const Player = (name, mark) => {
     const getName = () => name;
     const getMark = () => mark;
-    return {getName, getMark};
+    let score = 0;
+    const getScore = () => score;
+    const setScore = (new_score) => score = new_score;
+    return {getName, getMark, getScore, setScore};
 }
 
 // GameFlow module
 const GameFlow = (() => {
     let player1, player2, curr_player, game_mode, player1_mark, player2_mark;
-    let player1_score = 0, player2_score = 0, round = 1;
+    let round = 1;
 
     const cellEventHandler = (e) => {
         let cell_num = DisplayController.getCellNum(e.target);
@@ -287,6 +303,7 @@ const GameFlow = (() => {
             initGame();
             DisplayController.displayPlayer(player1);
             DisplayController.displayRound(round);
+            DisplayController.displayScore(player1, player2);
             DisplayController.displayGameScreen();
             DisplayController.resetInputField();
             DisplayController.clearSelectedClass();
@@ -298,6 +315,7 @@ const GameFlow = (() => {
         round++;
         DisplayController.displayPlayer(player1);
         DisplayController.displayRound(round);
+        DisplayController.displayScore(player1, player2);
         DisplayController.displayGameScreen();
     }
 
@@ -307,8 +325,6 @@ const GameFlow = (() => {
         player1_mark = undefined;
         player2_mark = undefined;
         game_mode = undefined;
-        player1_score = 0;
-        player2_score = 0;
         round = 1;
     }
 
