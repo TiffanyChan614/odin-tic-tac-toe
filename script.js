@@ -151,6 +151,7 @@ const DisplayController = (() => {
 
     const displayGameScreen = () => {
         game_screen.style.display = "flex";
+        controls.style.display = "flex";
         menu.style.display = "none";
         end_screen.style.display = "none";
         displayBoard(GameBoard.getBoard());
