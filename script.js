@@ -276,16 +276,9 @@ const GameFlow = (() => {
         }
     }
 
-    const anotherGame = () => {
-        if (getPlayer()) {
+    const backToMenu = () => {
             initSetting();
-            initGame();
-            DisplayController.displayPlayer(player1);
-            DisplayController.displayRound(round);
             DisplayController.displayMenuScreen();
-            DisplayController.resetInputField();
-            DisplayController.clearSelectedClass();
-        }
     }
 
     const newGame = () => {
@@ -335,7 +328,7 @@ const GameFlow = (() => {
 
     const setUpNewGameBtn = (() => {
         const new_game_btn = document.querySelector("#new-game");
-        new_game_btn.addEventListener('click', anotherGame);
+        new_game_btn.addEventListener('click', backToMenu);
     }) ();
 
     const setUpResetBtn = (() => {
@@ -345,7 +338,7 @@ const GameFlow = (() => {
 
     const setUpReturnBtn = (() => {
         const return_btn = document.querySelector("#return");
-        return_btn.addEventListener('click', anotherGame);
+        return_btn.addEventListener('click', backToMenu);
     }) ();
 
     const setUpGameMode = (() => {
