@@ -12,6 +12,7 @@
     --lightGray: #d8d8d8;
     --gray: #d3d3d3;
     --outerSpace: #464d5a;
+    --red: #e13d3d;
 }
 
 html, body {
@@ -75,6 +76,7 @@ footer {
 
 .cell {
     border: 0.4rem solid var(--lightGray);
+    font-size: 6rem;
 }
 
 .basic-setting {
@@ -215,4 +217,12 @@ input {
 
 .score {
     padding: 0.4rem 0.3rem;
+}
+
+.x {
+    color: var(--red);
+}
+
+.o {
+    color: var(--black);
 }

@@ -145,6 +145,18 @@ const DisplayController = (() => {
         }
     }) ();
 
+    const resetCell = () => {
+        const cells = document.querySelectorAll(".cell");
+        for (let cell of cells) {
+            if (cell.classList.contains("x")) {
+                cell.classList.remove("x");
+            }
+            if (cell.classList.contains("o")) {
+                cell.classList.remove("o");
+            }
+        }
+    };
+
     const getCellNum = (cell_elem) => {
         let id = cell_elem.id;
         return id.replace(/[^0-9]/g, '');
@@ -152,6 +164,12 @@ const DisplayController = (() => {
 
     const fillCell = (cell_elem, mark) => {
         cell_elem.textContent = mark;
+        if (mark === 'x') {
+            cell_elem.classList.add("x");
+        }
+        else {
+            cell_elem.classList.add("o");
+        }
     };
 
     const displayGameScreen = () => {
@@ -221,7 +239,7 @@ const DisplayController = (() => {
         }
     }
 
-    return {displayBoard, getCellNum, fillCell, displayPlayer, displayRound, displayScore,
+    return {displayBoard, resetCell, getCellNum, fillCell, displayPlayer, displayRound, displayScore,
         displayGameScreen, displayMenuScreen, displayEndScreen, displayTwoPlayersSetting,
         displayOnePlayerSetting, resetInputField, clearSelectedClass};
 }) ();
@@ -310,11 +328,9 @@ const GameFlow = (() => {
         }
     }
 
-    const newRound = () => {
+    const reset = () => {
         initGame();
-        round++;
         DisplayController.displayPlayer(player1);
-        DisplayController.displayRound(round);
         DisplayController.displayScore(player1, player2);
         DisplayController.displayGameScreen();
     }
@@ -331,6 +347,7 @@ const GameFlow = (() => {
     const initGame = () => {
         curr_player = player1;
         GameBoard.initBoard();
+        DisplayController.resetCell();
     }
 
     const setUpStartBtn = (() => {
@@ -340,7 +357,11 @@ const GameFlow = (() => {
 
     const setUpNewRoundBtn = (() => {
         const new_round_btn = document.querySelector("#new-round");
-        new_round_btn.addEventListener('click', newRound);
+        new_round_btn.addEventListener('click', () => {
+            reset();
+            round++;
+            DisplayController.displayRound(round);
+        });
     }) ();
 
     const setUpNewGameBtn = (() => {
@@ -350,7 +371,7 @@ const GameFlow = (() => {
 
     const setUpResetBtn = (() => {
         const reset_btn = document.querySelector("#reset");
-        reset_btn.addEventListener('click', newRound);
+        reset_btn.addEventListener('click', reset);
     }) ();
 
     const setUpReturnBtn = (() => {
@@ -394,13 +415,13 @@ const GameFlow = (() => {
         const x_mark_btn = document.querySelector("#x-mark");
         const o_mark_btn = document.querySelector("#o-mark");
         x_mark_btn.addEventListener('click', () => {
-            player1_mark = 'X';
-            player2_mark = 'O';
+            player1_mark = x_mark_btn.textContent;
+            player2_mark = o_mark_btn.textContent;
             toggleMark(x_mark_btn, o_mark_btn);
         })
         o_mark_btn.addEventListener('click', () => {
-            player1_mark = 'O';
-            player2_mark = 'X';
+            player1_mark = o_mark_btn.textContent;
+            player2_mark = x_mark_btn.textContent;
             toggleMark(o_mark_btn, x_mark_btn);
         })
     }) ();
@@ -412,15 +433,15 @@ const GameFlow = (() => {
         const o_mark_btn2 = document.querySelector("#player2-o-mark");
 
         const mark_variation1 = () => {
-            player1_mark = 'X';
-            player2_mark = 'O';
+            player1_mark = x_mark_btn1.textContent;
+            player2_mark = o_mark_btn2.textContent;
             toggleMark(x_mark_btn1, o_mark_btn1);
             toggleMark(o_mark_btn2, x_mark_btn2);
         }
 
         const mark_variation2 = () => {
-            player1_mark = 'O';
-            player2_mark = 'X';
+            player1_mark = o_mark_btn1.textContent;
+            player2_mark = x_mark_btn2.textContent;
             toggleMark(o_mark_btn1, x_mark_btn1);
             toggleMark(x_mark_btn2, o_mark_btn2);
         }
