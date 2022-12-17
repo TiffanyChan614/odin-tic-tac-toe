@@ -391,8 +391,8 @@ const GameFlow = (() => {
     }) ();
 
     const setUpReturnBtn = (() => {
-        const return_btn = document.querySelector("#return");
-        return_btn.addEventListener('click', backToMenu);
+        const return_btn = document.querySelectorAll(".return");
+        return_btn.forEach((btn) => btn.addEventListener('click', backToMenu));
     }) ();
 
     const setUpResetBtn = (() => {
