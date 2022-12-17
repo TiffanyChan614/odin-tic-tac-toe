@@ -106,12 +106,17 @@ const DisplayController = (() => {
     const player_name = document.querySelector("#player-name");
     const player_turn = document.querySelector(".player-turn");
     const round_p = document.querySelector(".round");
-    const score = document.querySelector(".score");
     const player1_score = document.querySelector("#player1-score");
     const player2_score = document.querySelector("#player2-score");
     const player1_display = document.querySelector("#player1-display");
     const player2_display = document.querySelector("#player2-display");
     const overlay = document.querySelector(".overlay");
+    const scoreboard = document.querySelector(".scoreboard");
+    const scoreboard_name1 = document.querySelector(".player1-total .player-name");
+    const scoreboard_name2 = document.querySelector(".player2-total .player-name");
+    const scoreboard_score1 = document.querySelector(".player1-total .end-score");
+    const scoreboard_score2 = document.querySelector(".player2-total .end-score");
+    const score_difference = document.querySelector(".score-difference");
 
     const displayBoard = (board) => {
         for (let i = 0; i < board.length; i++) {
@@ -178,6 +183,8 @@ const DisplayController = (() => {
         controls.style.display = "flex";
         menu.style.display = "none";
         end_screen.style.display = "none";
+        scoreboard.style.display = "none";
+        overlay.style.display = "none";
         displayBoard(GameBoard.getBoard());
     };
 
@@ -186,6 +193,7 @@ const DisplayController = (() => {
         menu.style.display = "flex";
         game_screen.style.display = "none";
         end_screen.style.display = "none";
+        scoreboard.style.display = "none";
         advanced_setting.style.display = "none";
     };
 
@@ -201,6 +209,17 @@ const DisplayController = (() => {
             end_msg.textContent = "It's a draw!";
         }
     };
+
+    const displayScoreBoard = (player1, player2) => {
+        scoreboard.style.display = "flex";
+        end_screen.style.display = "none";
+        scoreboard_name1.textContent = `${player1.getName()}`;
+        scoreboard_name2.textContent = `${player2.getName()}`;
+        scoreboard_score1.textContent = `${player1.getScore()}`;
+        scoreboard_score2.textContent = `${player2.getScore()}`;
+        let winner = player1.getScore() > player2.getScore()? player1 : player2;
+        score_difference.textContent = `${winner.getName()} wins by ${Math.abs(player1.getScore() - player2.getScore())} score`;
+    }
 
     const displayPlayer = (player) => {
         player_turn.textContent = player.getName() + "'s turn!";
@@ -243,8 +262,8 @@ const DisplayController = (() => {
     }
 
     return {displayBoard, resetCell, getCellNum, fillCell, displayPlayer, displayRound, displayScore,
-        displayGameScreen, displayMenuScreen, displayEndScreen, displayTwoPlayersSetting,
-        displayOnePlayerSetting, resetInputField, clearSelectedClass};
+        displayGameScreen, displayMenuScreen, displayEndScreen, displayScoreBoard,
+        displayTwoPlayersSetting, displayOnePlayerSetting, resetInputField, clearSelectedClass};
 }) ();
 
 // Player factory
@@ -319,6 +338,10 @@ const GameFlow = (() => {
             DisplayController.displayMenuScreen();
     }
 
+    const showScoreBoard = () => {
+        DisplayController.displayScoreBoard(player1, player2);
+    }
+
     const newGame = () => {
         if (getPlayer()) {
             initGame();
@@ -367,9 +390,9 @@ const GameFlow = (() => {
         });
     }) ();
 
-    const setUpNewGameBtn = (() => {
-        const new_game_btn = document.querySelector("#new-game");
-        new_game_btn.addEventListener('click', backToMenu);
+    const setUpReturnBtn = (() => {
+        const return_btn = document.querySelector("#return");
+        return_btn.addEventListener('click', backToMenu);
     }) ();
 
     const setUpResetBtn = (() => {
@@ -378,8 +401,8 @@ const GameFlow = (() => {
     }) ();
 
     const setUpEndGameBtn = (() => {
-        const end_game_btn = document.querySelector("#end-game");
-        end_game_btn.addEventListener('click', backToMenu);
+        const end_game_btn = document.querySelectorAll(".end-game");
+        end_game_btn.forEach(btn => btn.addEventListener('click', showScoreBoard));
     }) ();
 
     const setUpGameMode = (() => {

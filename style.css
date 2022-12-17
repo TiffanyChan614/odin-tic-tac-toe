@@ -41,12 +41,20 @@ main {
     display: flex;
     flex-direction: column;
     text-align: center;
-    gap: 2rem;
     align-items: center;
+}
+
+.menu, .end-screen {
+    gap: 2rem;
+}
+
+.game-screen {
+    gap: 1.5rem;
 }
 
 h1 {
     font-size: 3rem;
+    margin-top: 2rem;
 }
 
 footer {
@@ -58,25 +66,21 @@ footer {
     display: none;
 }
 
-.game-screen {
-    display: none;
-}
-
-.end-screen {
+.game-screen, .end-screen, .scoreboard {
     display: none;
 }
 
 .board {
     display: grid;
-    grid-template-rows: repeat(3, 10rem);
-    grid-template-columns: repeat(3, 10rem);
+    grid-template-rows: repeat(3, 8rem);
+    grid-template-columns: repeat(3, 8rem);
     justify-content: center;
     gap: 0;
 }
 
 .cell {
-    border: 0.4rem solid var(--lightGray);
-    font-size: 6rem;
+    border: 0.3rem solid var(--lightGray);
+    font-size: 5.5rem;
 }
 
 .basic-setting {
@@ -84,16 +88,16 @@ footer {
     gap: 1rem;
 }
 
-.basic-setting button, .controls button {
+.basic-setting button, .controls button, #return {
     background-color: var(--blueberry);
     color: var(--white);
     border: none;
     padding: 0.7rem 1rem;
     border-radius: 0.2rem;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
-.basic-setting button:hover, .controls button:hover {
+.basic-setting button:hover, .controls button:hover, #return:hover {
     background-color: var(--celticBlue);
 }
 
@@ -104,7 +108,7 @@ label {
 
 .advanced-setting {
     display: none;
-    border: 0.15rem solid var(--celticBlue);
+    border: 0.2rem solid var(--celticBlue);
     border-radius: 0 0 0.2rem 0.2rem;
     padding: 1rem;
 }
@@ -174,10 +178,10 @@ input {
 }
 
 #start {
-    width: 19.5rem;
+    width: 18.5rem;
     border: 0.2rem solid var(--blueberry);
     background-color: var(--white);
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     padding: 0.7rem;
     border-radius: 0.2rem;
 }
@@ -192,7 +196,8 @@ input {
 }
 
 .round {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
+    font-weight: bold;
 }
 
 .score-div {
@@ -200,13 +205,14 @@ input {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 96%;
+    width: 100%;
+    margin-bottom: 0.5rem;
 }
 
 .stat {
     display: flex;
     gap: 1rem;
-    font-size: 1.1rem;
+    font-size: 1rem;
     width: 100%;
     height: 100%;
 }
@@ -218,7 +224,7 @@ input {
 }
 
 .score {
-    padding: 0.4rem 0.3rem;
+    padding: 0.4rem 1rem;
 }
 
 .x {
@@ -229,7 +235,7 @@ input {
     color: var(--black);
 }
 
-.end-screen {
+.end-screen, .scoreboard {
     position: absolute;
     z-index: 2;
     font-size: 2rem;
@@ -253,4 +259,24 @@ input {
     opacity: 0.5;
     width: 100vw;
     height: 100vh;
+}
+
+.scoreboard {
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.total {
+    display: flex;
+    justify-content: space-between;
+}
+
+.congrats-msg, .final-result, .scoreboard-title {
+    text-align: center;
+}
+
+.game-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }

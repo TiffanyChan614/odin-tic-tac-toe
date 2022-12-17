@@ -77,30 +77,50 @@
         <div class="game-screen">
             <div class="overlay"></div>
             <h1>Tic Tac Toe</h1>
-            <p class="round"></p>
-            <p class="player-turn"></p>
-            <div class="score-div">
-                <div class="stat" id="player1-stat">
-                    <div class="display" id="player1-display"></div>
-                    <div class="score" id="player1-score"></div>
-                </div>
-                <div class="stat" id="player2-stat">
-                    <div class="display" id="player2-display"></div>
-                    <div class="score" id="player2-score"></div>
+            <div class="game-info">
+                <p class="round"></p>
+                <p class="player-turn"></p>
+                <div class="score-div">
+                    <div class="stat" id="player1-stat">
+                        <div class="display" id="player1-display"></div>
+                        <div class="score" id="player1-score"></div>
+                    </div>
+                    <div class="stat" id="player2-stat">
+                        <div class="display" id="player2-display"></div>
+                        <div class="score" id="player2-score"></div>
+                    </div>
                 </div>
             </div>
             <div class="board"></div>
             <div class="controls">
                 <button type="button" id="reset">Reset</button>
-                <button type="button" id="end-game">End Game</button>
+                <button type="button" class="end-game">End Game</button>
             </div>
         </div>
         <div class="end-screen">
             <p class="end-msg"></p>
             <div class="controls">
                 <button type="button" id="new-round">New Round</button>
-                <button type="button" id="new-game">New Game</button>
+                <button type="button" class="end-game">End Game</button>
             </div>
+        </div>
+        <div class="scoreboard">
+            <h2 class="scoreboard-title">Scoreboard</h2>
+            <div class="score-report">
+                <div class="total player1-total">
+                    <div class="player-name"></div>
+                    <div class="end-score"></div>
+                </div>
+                <div class="total player2-total">
+                    <div class="player-name"></div>
+                    <div class="end-score"></div>
+                </div>
+            </div>
+            <div class="final-result">
+                <p class="congrats-msg">Congratulations!</p>
+                <p class="score-difference"></p>
+            </div>
+            <button type="button" id="return">Back to Menu</button>
         </div>
     </main>
     <footer>
