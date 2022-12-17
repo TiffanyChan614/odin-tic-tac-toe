@@ -217,8 +217,23 @@ const DisplayController = (() => {
         scoreboard_name2.textContent = `${player2.getName()}`;
         scoreboard_score1.textContent = `${player1.getScore()}`;
         scoreboard_score2.textContent = `${player2.getScore()}`;
-        let winner = player1.getScore() > player2.getScore()? player1 : player2;
-        score_difference.textContent = `${winner.getName()} wins by ${Math.abs(player1.getScore() - player2.getScore())} score`;
+        let winner;
+        if (player1.getScore() > player2.getScore()) {
+            winner = player1;
+        }
+        else if (player2.getScore() > player1.getScore()) {
+            winner = player2;
+        }
+        else {
+            winner = null;
+        }
+        if (winner) {
+            score_difference.textContent = `${winner.getName()} wins by
+            ${Math.abs(player1.getScore() - player2.getScore())} score`;
+        }
+        else {
+            score_difference.textContent = "It's a win-win situation";
+        }
     }
 
     const displayPlayer = (player) => {
