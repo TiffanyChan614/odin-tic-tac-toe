@@ -85,6 +85,7 @@ footer {
     grid-template-columns: repeat(3, 8rem);
     justify-content: center;
     gap: 0;
+    margin: 1rem 0;
 }
 
 .cell {
@@ -217,11 +218,10 @@ input {
 }
 
 .score-div {
-    border: 0.2rem solid var(--blueberry);
+    border: 0.15rem solid var(--blueberry);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
     border-radius: 0.2rem;
     white-space: nowrap;
 }

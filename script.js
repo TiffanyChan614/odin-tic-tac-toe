@@ -213,6 +213,7 @@ const DisplayController = (() => {
     const displayScoreBoard = (player1, player2) => {
         scoreboard.style.display = "flex";
         end_screen.style.display = "none";
+        overlay.style.display = "block";
         scoreboard_name1.textContent = `${player1.getName()}`;
         scoreboard_name2.textContent = `${player2.getName()}`;
         scoreboard_score1.textContent = `${player1.getScore()}`;
