@@ -168,7 +168,8 @@ const DisplayController = (() => {
         return id.replace(/[^0-9]/g, '');
     };
 
-    const fillCell = (cell_elem, mark) => {
+    const fillCell = (row, col, mark) => {
+        const cell_elem = document.querySelector(`#cell-${row}${col}`);
         cell_elem.textContent = mark;
         if (mark === 'x') {
             cell_elem.classList.add("x");
@@ -289,30 +290,66 @@ const Player = (name, mark) => {
     let score = 0;
     const getScore = () => score;
     const setScore = (new_score) => score = new_score;
-    return {getName, getMark, getScore, setScore};
+    const move = (row, col) => {
+        if (GameBoard.isEmpty(row, col)){
+            GameBoard.setBoard(row, col, mark);
+            DisplayController.fillCell(row, col, mark);
+        }
+    };
+    return {getName, getMark, getScore, setScore, move};
+}
+
+// Easy AI Player factory
+const EasyAiPlayer = (name, mark) => {
+    const {getName} = Player(name, mark);
+    const {getMark} = Player(name, mark);
+    let score = 0;
+    const getScore = () => score;
+    const setScore = (new_score) => score = new_score;
+    let board = GameBoard.getBoard();
+    const move = () => {
+        let randomRow, randomCol;
+        do {
+            randomRow = Math.floor(Math.random() * board.length);
+            randomCol = Math.floor(Math.random() * board.length);
+        } while (!GameBoard.isEmpty(randomRow, randomCol));
+        GameBoard.setBoard(randomRow, randomCol);
+        DisplayController.fillCell(randomRow, randomCol, mark);
+    }
+    return {getName, getMark, getScore, setScore, move};
 }
 
 // GameFlow module
 const GameFlow = (() => {
-    let player1, player2, curr_player, game_mode, player1_mark, player2_mark;
+    let player1, player2, curr_player, game_mode, player1_mark, player2_mark, computer_player;
     let round = 1;
 
-    const cellEventHandler = (e) => {
-        let cell_num = DisplayController.getCellNum(e.target);
-        let row = cell_num[0];
-        let col = cell_num[1];
-        if (GameBoard.isEmpty(row, col)) {
-            GameBoard.setBoard(row, col, curr_player.getMark());
-            DisplayController.fillCell(e.target, curr_player.getMark());
-            DisplayController.displayBoard(GameBoard.getBoard());
-            if (GameBoard.checkWin()) {
-                DisplayController.displayEndScreen('w', curr_player);
-            }
-            else if (GameBoard.checkBoardFull()) {
-                DisplayController.displayEndScreen('d');
-            }
-            else {
+    const checkGameEnd = () => {
+        if (GameBoard.checkWin()) {
+            DisplayController.displayEndScreen('w', curr_player);
+            return true;
+        }
+        else if (GameBoard.checkBoardFull()) {
+            DisplayController.displayEndScreen('d');
+            return true;
+        }
+        return false;
+    }
+
+    const moveHandler = (e) => {
+        let cell_num = e.target.id.replace(/[^0-9]/g, '');
+        curr_player.move(cell_num[0], cell_num[1]);
+        if (!checkGameEnd()){
+            if (game_mode == 2) {
                 curr_player = switchPlayer(curr_player);
+            }
+            else if (game_mode == 1) {
+                DisplayController.displayPlayer(player2);
+                curr_player = player2;
+                player2.move();
+                checkGameEnd();
+                DisplayController.displayPlayer(player1);
+                curr_player = player1;
             }
         }
     };
@@ -323,10 +360,10 @@ const GameFlow = (() => {
         return next_player;
     }
 
-    const move = (() => {
+    const playerMove = (() => {
         const cells = document.querySelectorAll(".cell");
         Array.from(cells).forEach(cell =>
-            cell.addEventListener('click', cellEventHandler));
+            cell.addEventListener('click', moveHandler));
     }) ();
 
     const getPlayer = () => {
@@ -343,7 +380,7 @@ const GameFlow = (() => {
             else if (game_mode == 1) {
                 const player_name = document.querySelector("#player-name");
                 player1 = Player(player_name.value, player1_mark);
-                player2 = Player("Computer", player2_mark);
+                player2 = EasyAiPlayer(computer_player, player2_mark);
             }
             return true;
         }
@@ -384,6 +421,7 @@ const GameFlow = (() => {
         player2_mark = undefined;
         game_mode = undefined;
         round = 1;
+        computer_player = undefined;
     }
 
     const initGame = () => {
@@ -495,6 +533,17 @@ const GameFlow = (() => {
         o_mark_btn1.addEventListener('click', mark_variation2);
 
         o_mark_btn2.addEventListener('click', mark_variation1);
+    }) ();
+
+    const setUpDifficultyBtn = (() => {
+        const difficultyBtns = document.querySelectorAll(".difficulty-btn");
+        difficultyBtns.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                if (btn.textContent == "Easy"){
+                    computer_player = "Easy peasy AI";
+                }
+            })
+        })
     }) ();
 
 }) ();
