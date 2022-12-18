@@ -344,12 +344,13 @@ const GameFlow = (() => {
                 curr_player = switchPlayer(curr_player);
             }
             else if (game_mode == 1) {
-                DisplayController.displayPlayer(player2);
-                curr_player = player2;
-                player2.move();
+                setTimeout(() => {
+                    DisplayController.displayPlayer(player2);
+                    player2.move();
+                }, 500);
                 checkGameEnd();
-                DisplayController.displayPlayer(player1);
                 curr_player = player1;
+                DisplayController.displayPlayer(curr_player);
             }
         }
     };
