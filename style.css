@@ -1,315 +1,333 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 @font-face {
-    font-family: 'Poppins';
-    src: url(Fonts/poppins-regular-webfont.woff2) format('woff2');
+  font-family: "Poppins";
+  src: url(Fonts/poppins-regular-webfont.woff2) format("woff2");
 }
 
 :root {
-    --black: #070b14;
-    --white: #ffffff;
-    --celticBlue: #2d6ade;
-    --blueberry: #4c8cf0;
-    --lightGray: #d8d8d8;
-    --gray: #d3d3d3;
-    --outerSpace: #464d5a;
-    --red: #e13d3d;
+  --black: #070b14;
+  --white: #ffffff;
+  --celticBlue: #2d6ade;
+  --blueberry: #4c8cf0;
+  --lightGray: #d8d8d8;
+  --gray: #d3d3d3;
+  --outerSpace: #464d5a;
+  --red: #e13d3d;
 }
 
-html, body {
-    background: var(--white);
-    color: var(--black);
+html,
+body {
+  background: var(--white);
+  color: var(--black);
 }
 
-html, body, button {
-    font-family: 'Poppins', Geneva, Verdana, sans-serif;
+html,
+body,
+button {
+  font-family: "Poppins", Geneva, Verdana, sans-serif;
 }
 
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100vh;
-    gap: 2rem;
-    width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  gap: 2rem;
+  width: 100vw;
 }
 
 main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.menu, .game-screen, .end-screen {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    align-items: center;
+.menu,
+.game-screen,
+.end-screen {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
 }
 
-.menu, .end-screen {
-    gap: 1rem;
+.menu,
+.end-screen {
+  gap: 1rem;
 }
 
 .game-screen {
-    gap: 1rem;
+  gap: 1rem;
 }
 
 h1 {
-    font-size: 3rem;
-    margin-top: 2rem;
+  font-size: 3rem;
+  margin-top: 2rem;
 }
 
 footer {
-    flex-shrink: 0;
-    font-size: 0.8rem;
+  flex-shrink: 0;
+  font-size: 0.8rem;
 }
 
 .advanced-setting > div {
-    display: none;
+  display: none;
 }
 
-.game-screen, .end-screen, .scoreboard {
-    display: none;
+.game-screen,
+.end-screen,
+.scoreboard {
+  display: none;
 }
 
 .board {
-    display: grid;
-    grid-template-rows: repeat(3, 8rem);
-    grid-template-columns: repeat(3, 8rem);
-    justify-content: center;
-    gap: 0;
-    margin: 1rem 0;
+  display: grid;
+  grid-template-rows: repeat(3, 8rem);
+  grid-template-columns: repeat(3, 8rem);
+  justify-content: center;
+  gap: 0;
+  margin: 1rem 0;
 }
 
 .cell {
-    border: 0.3rem solid var(--lightGray);
-    font-size: 5.5rem;
+  border: 0.3rem solid var(--lightGray);
+  font-size: 5.5rem;
 }
 
 .basic-setting {
-    display: flex;
-    gap: 1rem;
+  display: flex;
+  gap: 1rem;
 }
 
-.basic-setting button, .controls button, .return {
-    background-color: var(--blueberry);
-    color: var(--white);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0.2rem;
+.basic-setting button,
+.controls button,
+.return {
+  background-color: var(--blueberry);
+  color: var(--white);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.2rem;
 }
 
 .basic-setting button {
-    font-size: 1rem;
+  font-size: 1rem;
 }
 
 .controls button {
-    font-size: 0.9rem;
+  font-size: 0.9rem;
 }
 
-.basic-setting button:hover, .controls button:hover, .return:hover {
-    background-color: var(--celticBlue);
+.basic-setting button:hover,
+.controls button:hover,
+.return:hover {
+  background-color: var(--celticBlue);
 }
 
 label {
-    display: block;
-    margin-bottom: 0.5rem;
+  display: block;
+  margin-bottom: 0.5rem;
 }
 
 .advanced-setting {
-    display: none;
-    border: 0.2rem solid var(--celticBlue);
-    border-radius: 0 0 0.2rem 0.2rem;
-    padding: 1rem;
+  display: none;
+  border: 0.2rem solid var(--celticBlue);
+  border-radius: 0 0 0.2rem 0.2rem;
+  padding: 1rem;
 }
 
-.two-players-setting, .two-players-setting > div, .one-player-setting {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    align-items: center;
+.two-players-setting,
+.two-players-setting > div,
+.one-player-setting {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  align-items: center;
 }
 
 .player-title {
-    font-size: 1.1rem;
-    font-weight: 700;
+  font-size: 1.1rem;
+  font-weight: 700;
 }
 
 .basic-setting button.selected {
-    background-color: var(--celticBlue);
+  background-color: var(--celticBlue);
 }
 
 .basic-setting .selected {
-    border-radius: 0.2rem 0.2rem 0 0;
+  border-radius: 0.2rem 0.2rem 0 0;
 }
 
 input {
-    width: 90%;
-    border: 0.15rem solid var(--gray);
-    padding: 0.2rem 0.5rem;
-    height: 1.8rem;
-    font-size: 0.9rem;
-    border-radius: 0.2rem;
+  width: 90%;
+  border: 0.15rem solid var(--gray);
+  padding: 0.2rem 0.5rem;
+  height: 1.8rem;
+  font-size: 0.9rem;
+  border-radius: 0.2rem;
 }
 
 .mark-buttons {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
 }
 
 .mark-field p {
-    margin-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .mark-field button {
-    width: 3.5rem;
-    height: 3.5rem;
-    font-size: 2rem;
-    border: none;
-    background-color: var(--white);
+  width: 3.5rem;
+  height: 3.5rem;
+  font-size: 2rem;
+  border: none;
+  background-color: var(--white);
 }
 
-.mark-field button:hover, .mark-field .selected {
-    background-color: var(--lightGray);
-    border-radius: 0.2rem;
+.mark-field button:hover,
+.mark-field .selected {
+  background-color: var(--lightGray);
+  border-radius: 0.2rem;
 }
 
 .line-break {
-    background-color: var(--gray);
-    height: 0.1rem;
-    width: 80%;
+  background-color: var(--gray);
+  height: 0.1rem;
+  width: 80%;
 }
 
 .controls {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
 }
 
 #start {
-    width: 18.5rem;
-    border: 0.2rem solid var(--blueberry);
-    background-color: var(--white);
-    font-size: 1.2rem;
-    padding: 0.5rem;
-    border-radius: 0.2rem;
+  width: 18.5rem;
+  border: 0.2rem solid var(--blueberry);
+  background-color: var(--white);
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  border-radius: 0.2rem;
 }
 
 #start:hover {
-    background-color: var(--blueberry);
-    color: var(--white);
+  background-color: var(--blueberry);
+  color: var(--white);
 }
 
 .player-turn {
-    font-size: 1.2rem;
+  font-size: 1.2rem;
 }
 
 .round {
-    font-size: 1.3rem;
-    font-weight: bold;
+  font-size: 1.3rem;
+  font-weight: bold;
 }
 
 .score-div {
-    border: 0.15rem solid var(--blueberry);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 0.2rem;
-    white-space: nowrap;
+  border: 0.15rem solid var(--blueberry);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0.2rem;
+  white-space: nowrap;
 }
 
 .stat {
-    display: flex;
-    gap: 1rem;
-    font-size: 1rem;
-    width: 100%;
-    height: 100%;
+  display: flex;
+  gap: 1rem;
+  font-size: 1rem;
+  width: 100%;
+  height: 100%;
 }
 
 .display {
-    background-color: var(--blueberry);
-    color: var(--white);
-    padding: 0.4rem 1rem;
+  background-color: var(--blueberry);
+  color: var(--white);
+  padding: 0.4rem 1rem;
 }
 
 .score {
-    padding: 0.4rem 1rem;
+  padding: 0.4rem 1rem;
 }
 
 .x {
-    color: var(--red);
+  color: var(--red);
 }
 
 .o {
-    color: var(--black);
+  color: var(--black);
 }
 
-.end-screen, .scoreboard {
-    position: absolute;
-    z-index: 2;
-    font-size: 2rem;
-    background-color: var(--white);
-    border: 0.3rem dashed var(--celticBlue);
-    padding: 3rem 8rem;
-    border-radius: 0.7rem;
+.end-screen,
+.scoreboard {
+  position: absolute;
+  z-index: 2;
+  font-size: 2rem;
+  background-color: var(--white);
+  border: 0.3rem dashed var(--celticBlue);
+  padding: 3rem 8rem;
+  border-radius: 0.7rem;
 }
 
 .end-screen .controls {
-    display: flex;
-    gap: 1rem;
+  display: flex;
+  gap: 1rem;
 }
 
 .overlay {
-    display: none;
-    position: absolute;
-    top: 0;
-    z-index: 1;
-    background-color: var(--gray);
-    opacity: 0.5;
-    width: 100vw;
-    height: 100vh;
+  display: none;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  background-color: var(--gray);
+  opacity: 0.5;
+  width: 100vw;
+  height: 100vh;
 }
 
 .scoreboard {
-    flex-direction: column;
-    gap: 3rem;
+  flex-direction: column;
+  gap: 3rem;
 }
 
-.scoreboard-title{
-    font-size: 2.5rem;
+.scoreboard-title {
+  font-size: 2.5rem;
 }
 
 .total {
-    font-size: 1.5rem;
+  font-size: 1.5rem;
 }
 
 .congrats-msg {
-    font-size: 2rem;
+  font-size: 2rem;
 }
 
 .score-difference {
-    font-size: 1.5rem;
+  font-size: 1.5rem;
 }
 
 .total {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
-.congrats-msg, .final-result, .scoreboard-title {
-    text-align: center;
+.congrats-msg,
+.final-result,
+.scoreboard-title {
+  text-align: center;
 }
 
 .game-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
