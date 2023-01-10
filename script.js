@@ -244,7 +244,9 @@ const DisplayController = (() => {
       winner = null;
     }
     if (game_mode === 1 && winner === player2) {
+      console.log("You lose!");
       congrats_msg.textContent = "If you learn from a loss you have not lost.";
+      congrats_msg.style.fontSize = "1.8rem";
     }
     if (winner) {
       score_difference.textContent = `${winner.getName()} wins by
@@ -400,7 +402,7 @@ const GameFlow = (() => {
       DisplayController.displayEndScreen(curr_player);
       return true;
     } else if (GameBoard.checkBoardFull()) {
-      DisplayController.displayEndScreen(None);
+      DisplayController.displayEndScreen(null);
       return true;
     }
     return false;
@@ -491,7 +493,8 @@ const GameFlow = (() => {
     const showScoreBoard = () => {
       DisplayController.displayScoreBoard(
         GameStat.getPlayer1(),
-        GameStat.getPlayer2()
+        GameStat.getPlayer2(),
+        GameStat.getGameMode()
       );
     };
 
