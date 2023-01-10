@@ -214,11 +214,11 @@ const DisplayController = (() => {
     advanced_setting.style.display = "none";
   };
 
-  const displayEndScreen = (result, winner) => {
+  const displayEndScreen = (winner) => {
     overlay.style.display = "block";
     end_screen.style.display = "flex";
     controls.style.display = "none";
-    if (result === "w") {
+    if (winner) {
       end_msg.textContent = winner.getName() + " wins!";
       winner.setScore(winner.getScore() + 1);
     } else {
@@ -344,7 +344,8 @@ const EasyAIPlayer = (name, mark, score = 0) => {
       randomRow = Math.floor(Math.random() * board.length);
       randomCol = Math.floor(Math.random() * board.length);
     } while (!GameBoard.isEmpty(randomRow, randomCol));
-    GameBoard.setBoard(randomRow, randomCol);
+    GameBoard.setBoard(randomRow, randomCol, mark);
+    console.log(board);
     DisplayController.fillCell(randomRow, randomCol, mark);
   };
   return { getName, getMark, getScore, setScore, makeMove };
@@ -365,10 +366,10 @@ const GameFlow = (() => {
   const checkGameEnd = () => {
     if (GameBoard.checkWin()) {
       console.log(curr_player + "wins");
-      DisplayController.displayEndScreen("w", curr_player);
+      DisplayController.displayEndScreen(curr_player);
       return true;
     } else if (GameBoard.checkBoardFull()) {
-      DisplayController.displayEndScreen("d");
+      DisplayController.displayEndScreen(None);
       return true;
     }
     return false;
@@ -379,6 +380,7 @@ const GameFlow = (() => {
     curr_player.makeMove(cell_num[0], cell_num[1]);
     if (!checkGameEnd()) {
       curr_player = switchPlayer(curr_player);
+      //   console.log(curr_player.getMark());
       if (game_mode == 1) {
         setTimeout(() => {
           curr_player.makeMove();
