@@ -320,6 +320,15 @@ const Player = (name, mark, score = 0) => {
   const getMark = () => mark;
   const getScore = () => score;
   const setScore = (new_score) => (score = new_score);
+  return { getName, getMark, getScore, setScore };
+};
+
+const HumanPlayer = (name, mark) => {
+  let player = Player(name, mark);
+  const getName = player.getName;
+  const getMark = player.getMark;
+  const getScore = player.getScore;
+  const setScore = player.setScore;
   const makeMove = (...args) => {
     // console.log("human move");
     let position = args;
@@ -336,11 +345,12 @@ const Player = (name, mark, score = 0) => {
   return { getName, getMark, getScore, setScore, makeMove };
 };
 
-const EasyAIPlayer = (name, mark, score = 0) => {
-  const { getName } = Player(name, mark);
-  const { getMark } = Player(name, mark);
-  const getScore = () => score;
-  const setScore = (new_score) => (score = new_score);
+const EasyAIPlayer = (name, mark) => {
+  let player = Player(name, mark);
+  const getName = player.getName;
+  const getMark = player.getMark;
+  const getScore = player.getScore;
+  const setScore = player.setScore;
   const makeMove = () => {
     // console.log("ai move");
     let board = GameBoard.getBoard();
@@ -447,11 +457,11 @@ const GameFlow = (() => {
       if (GameStat.getGameMode() === 2) {
         const player1_name = document.querySelector("#player1-name");
         const player2_name = document.querySelector("#player2-name");
-        GameStat.setPlayer1(Player(player1_name.value, player1_mark));
-        GameStat.setPlayer2(Player(player2_name.value, player2_mark));
+        GameStat.setPlayer1(HumanPlayer(player1_name.value, player1_mark));
+        GameStat.setPlayer2(HumanPlayer(player2_name.value, player2_mark));
       } else if (GameStat.getGameMode() === 1) {
         const player_name = document.querySelector("#player-name");
-        GameStat.setPlayer1(Player(player_name.value, player1_mark));
+        GameStat.setPlayer1(HumanPlayer(player_name.value, player1_mark));
         if (GameStat.getAiDifficulty() === 1) {
           GameStat.setPlayer2(EasyAIPlayer("Easy Peasy AI", player2_mark));
         }
