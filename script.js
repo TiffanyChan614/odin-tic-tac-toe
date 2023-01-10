@@ -265,16 +265,16 @@ const DisplayController = (() => {
     player2_score.textContent = player2.getScore();
   };
 
-  const displayTwoPlayersSetting = () => {
-    two_players_setting.style.display = "flex";
-    one_player_setting.style.display = "none";
-    advanced_setting.style.display = "block";
-  };
-
-  const displayOnePlayerSetting = () => {
-    two_players_setting.style.display = "none";
-    one_player_setting.style.display = "flex";
-    advanced_setting.style.display = "block";
+  const displayGameSetting = (game_mode) => {
+    if (game_mode === 2) {
+      two_players_setting.style.display = "flex";
+      one_player_setting.style.display = "none";
+      advanced_setting.style.display = "block";
+    } else if (game_mode === 1) {
+      two_players_setting.style.display = "none";
+      one_player_setting.style.display = "flex";
+      advanced_setting.style.display = "block";
+    }
   };
 
   const resetInputField = () => {
@@ -302,8 +302,7 @@ const DisplayController = (() => {
     displayMenuScreen,
     displayEndScreen,
     displayScoreBoard,
-    displayTwoPlayersSetting,
-    displayOnePlayerSetting,
+    displayGameSetting,
     resetInputField,
     clearSelectedClass,
   };
@@ -351,21 +350,49 @@ const EasyAIPlayer = (name, mark, score = 0) => {
   return { getName, getMark, getScore, setScore, makeMove };
 };
 
-// GameFlow module
-const GameFlow = (() => {
-  let player1,
-    player2,
-    curr_player,
-    game_mode,
-    player1_mark,
-    player2_mark,
-    computer_player,
-    aiDifficulty;
+const GameStat = (() => {
+  let player1, player2, game_mode, ai_difficulty;
   let round = 1;
+
+  const getPlayer1 = () => player1;
+  const setPlayer1 = (player) => (player1 = player);
+  const getPlayer2 = () => player2;
+  const setPlayer2 = (player) => (player2 = player);
+  const getGameMode = () => game_mode;
+  const setGameMode = (new_game_mode) => (game_mode = new_game_mode);
+  const getAiDifficulty = () => ai_difficulty;
+  const setAiDifficulty = (new_ai_difficulty) =>
+    (ai_difficulty = new_ai_difficulty);
+  const getRound = () => round;
+  const increaseRound = () => round++;
+  const resetGame = () => {
+    player1 = undefined;
+    player2 = undefined;
+    game_mode = undefined;
+    ai_difficulty = undefined;
+    round = 1;
+  };
+
+  return {
+    getPlayer1,
+    getPlayer2,
+    setPlayer1,
+    setPlayer2,
+    getGameMode,
+    setGameMode,
+    getAiDifficulty,
+    setAiDifficulty,
+    getRound,
+    increaseRound,
+    resetGame,
+  };
+})();
+
+const GameFlow = (() => {
+  let curr_player, player1_mark, player2_mark;
 
   const checkGameEnd = () => {
     if (GameBoard.checkWin()) {
-      console.log(curr_player + "wins");
       DisplayController.displayEndScreen(curr_player);
       return true;
     } else if (GameBoard.checkBoardFull()) {
@@ -376,212 +403,231 @@ const GameFlow = (() => {
   };
 
   const moveHandler = (e) => {
-    let cell_num = e.target.id.replace(/[^0-9]/g, "");
+    cell_num = e.target.id.replace(/[^0-9]/g, "");
     curr_player.makeMove(cell_num[0], cell_num[1]);
     if (!checkGameEnd()) {
       curr_player = switchPlayer(curr_player);
-      //   console.log(curr_player.getMark());
-      if (game_mode == 1) {
+      if (GameStat.getGameMode() === 1) {
         setTimeout(() => {
           curr_player.makeMove();
-          checkGameEnd();
-          curr_player = switchPlayer(curr_player);
+          if (!checkGameEnd()) {
+            curr_player = switchPlayer(curr_player);
+          }
         }, 500);
       }
     }
   };
 
+  const playerMove = (() => {
+    const cells = document.querySelectorAll(".cell");
+    Array.from(cells).forEach((cell) => {
+      cell.addEventListener("click", moveHandler);
+    });
+  })();
+
   const switchPlayer = (curr_player) => {
-    let next_player = curr_player === player1 ? player2 : player1;
+    let next_player =
+      curr_player === GameStat.getPlayer1()
+        ? GameStat.getPlayer2()
+        : GameStat.getPlayer1();
     DisplayController.displayPlayer(next_player);
     return next_player;
   };
-
-  const playerMove = (() => {
-    const cells = document.querySelectorAll(".cell");
-    Array.from(cells).forEach((cell) =>
-      cell.addEventListener("click", moveHandler)
-    );
-  })();
 
   const getPlayer = () => {
     if (!player1_mark || !player2_mark) {
       return false;
     } else {
-      if (game_mode == 2) {
+      if (GameStat.getGameMode() === 2) {
         const player1_name = document.querySelector("#player1-name");
         const player2_name = document.querySelector("#player2-name");
-        player1 = Player(player1_name.value, player1_mark);
-        player2 = Player(player2_name.value, player2_mark);
-      } else if (game_mode == 1) {
+        GameStat.setPlayer1(Player(player1_name.value, player1_mark));
+        GameStat.setPlayer2(Player(player2_name.value, player2_mark));
+      } else if (GameStat.getGameMode() === 1) {
         const player_name = document.querySelector("#player-name");
-        player1 = Player(player_name.value, player1_mark);
-        if (aiDifficulty == "Easy") {
-          player2 = EasyAIPlayer(computer_player, player2_mark);
+        GameStat.setPlayer1(Player(player_name.value, player1_mark));
+        if (GameStat.getAiDifficulty() === 1) {
+          GameStat.setPlayer2(EasyAIPlayer("Easy Peasy AI", player2_mark));
         }
       }
       return true;
     }
   };
 
-  const backToMenu = () => {
-    initSetting();
-    DisplayController.displayMenuScreen();
-  };
+  const setUpControlButtons = (() => {
+    const initSetting = () => {
+      GameStat.resetGame();
+      player1_mark = undefined;
+      player2_mark = undefined;
+    };
 
-  const showScoreBoard = () => {
-    DisplayController.displayScoreBoard(player1, player2);
-  };
+    const initGame = () => {
+      curr_player = GameStat.getPlayer1();
+      GameBoard.initBoard();
+      DisplayController.resetCell();
+    };
 
-  const newGame = () => {
-    if (getPlayer()) {
-      initGame();
-      DisplayController.displayPlayer(player1);
-      DisplayController.displayRound(round);
-      DisplayController.displayScore(player1, player2);
+    const initDisplay = () => {
+      DisplayController.displayPlayer(GameStat.getPlayer1());
+      DisplayController.displayRound(GameStat.getRound());
+      DisplayController.displayScore(
+        GameStat.getPlayer1(),
+        GameStat.getPlayer2()
+      );
       DisplayController.displayGameScreen();
       DisplayController.resetInputField();
       DisplayController.clearSelectedClass();
-    }
-  };
+    };
 
-  const reset = () => {
-    initGame();
-    DisplayController.displayPlayer(player1);
-    DisplayController.displayScore(player1, player2);
-    DisplayController.displayGameScreen();
-  };
+    const backToMenu = () => {
+      initSetting();
+      DisplayController.displayMenuScreen();
+    };
 
-  const initSetting = () => {
-    player1 = undefined;
-    player2 = undefined;
-    player1_mark = undefined;
-    player2_mark = undefined;
-    game_mode = undefined;
-    round = 1;
-    computer_player = undefined;
-  };
+    const showScoreBoard = () => {
+      DisplayController.displayScoreBoard(
+        GameStat.getPlayer1(),
+        GameStat.getPlayer2()
+      );
+    };
 
-  const initGame = () => {
-    curr_player = player1;
-    GameBoard.initBoard();
-    DisplayController.resetCell();
-  };
+    const newGame = () => {
+      if (getPlayer()) {
+        initGame();
+        initDisplay();
+      }
+    };
 
-  const setUpStartBtn = (() => {
-    const start_btn = document.querySelector("#start");
-    start_btn.addEventListener("click", newGame);
-  })();
+    const reset = () => {
+      initGame();
+      DisplayController.displayPlayer(GameStat.getPlayer1());
+      DisplayController.displayScore(
+        GameStat.getPlayer1(),
+        GameStat.getPlayer2()
+      );
+      DisplayController.displayGameScreen();
+    };
 
-  const setUpNewRoundBtn = (() => {
-    const new_round_btn = document.querySelector("#new-round");
-    new_round_btn.addEventListener("click", () => {
-      reset();
-      round++;
-      DisplayController.displayRound(round);
-    });
-  })();
+    const setUpStartBtn = (() => {
+      const start_btn = document.querySelector("#start");
+      start_btn.addEventListener("click", newGame);
+    })();
 
-  const setUpReturnBtn = (() => {
-    const return_btn = document.querySelectorAll(".return");
-    return_btn.forEach((btn) => btn.addEventListener("click", backToMenu));
-  })();
+    const setUpNewRoundBtn = (() => {
+      const new_round_btn = document.querySelector("#new-round");
+      new_round_btn.addEventListener("click", () => {
+        reset();
+        GameStat.increaseRound();
+        DisplayController.displayBoard(GameStat.getRound());
+      });
+    })();
 
-  const setUpResetBtn = (() => {
-    const reset_btn = document.querySelector("#reset");
-    reset_btn.addEventListener("click", reset);
-  })();
+    const setUpReturnBtn = (() => {
+      const return_btn = document.querySelectorAll(".return");
+      return_btn.forEach((btn) => btn.addEventListener("click", backToMenu));
+    })();
 
-  const setUpEndGameBtn = (() => {
-    const end_game_btn = document.querySelectorAll(".end-game");
-    end_game_btn.forEach((btn) =>
-      btn.addEventListener("click", showScoreBoard)
-    );
+    const setUpResetBtn = (() => {
+      const reset_btn = document.querySelector("#reset");
+      reset_btn.addEventListener("click", reset);
+    })();
+
+    const setUpEndGameBtn = (() => {
+      const end_game_btn = document.querySelectorAll(".end-game");
+      end_game_btn.forEach((btn) =>
+        btn.addEventListener("click", showScoreBoard)
+      );
+    })();
   })();
 
   const setUpGameMode = (() => {
-    const two_players_btn = document.querySelector("#two-players");
     const one_player_btn = document.querySelector("#one-player");
-    two_players_btn.addEventListener("click", () => {
-      if (game_mode != 2) {
-        game_mode = 2;
-        two_players_btn.classList.add("selected");
-        DisplayController.displayTwoPlayersSetting();
-        if (one_player_btn.classList.contains("selected")) {
-          one_player_btn.classList.remove("selected");
+    const two_players_btn = document.querySelector("#two-players");
+
+    const toggleGameMode = (game_mode, btnOn, btnOff) => {
+      if (GameStat.getGameMode() != game_mode) {
+        GameStat.setGameMode(game_mode);
+        // console.log(GameStat.getGameMode());
+        btnOn.classList.add("selected");
+        DisplayController.displayGameSetting(game_mode);
+        if (btnOff.classList.contains("selected")) {
+          btnOff.classList.remove("selected");
         }
       }
-    });
-    one_player_btn.addEventListener("click", () => {
-      if (game_mode != 1) {
-        game_mode = 1;
-        one_player_btn.classList.add("selected");
-        DisplayController.displayOnePlayerSetting();
-        if (two_players_btn.classList.contains("selected")) {
-          two_players_btn.classList.remove("selected");
-        }
+    };
+
+    one_player_btn.addEventListener("click", () =>
+      toggleGameMode(1, one_player_btn, two_players_btn)
+    );
+
+    two_players_btn.addEventListener("click", () =>
+      toggleGameMode(2, two_players_btn, one_player_btn)
+    );
+  })();
+
+  const setUpMark = (() => {
+    const toggleMark = (btn1, btn2) => {
+      btn1.classList.add("selected");
+      if (btn2.classList.contains("selected")) {
+        btn2.classList.remove("selected");
       }
-    });
-  })();
-
-  const toggleMark = (btn1, btn2) => {
-    btn1.classList.add("selected");
-    if (btn2.classList.contains("selected")) {
-      btn2.classList.remove("selected");
-    }
-  };
-
-  const setUpOnePlayerMark = (() => {
-    const x_mark_btn = document.querySelector("#x-mark");
-    const o_mark_btn = document.querySelector("#o-mark");
-    x_mark_btn.addEventListener("click", () => {
-      player1_mark = x_mark_btn.textContent;
-      player2_mark = o_mark_btn.textContent;
-      toggleMark(x_mark_btn, o_mark_btn);
-    });
-    o_mark_btn.addEventListener("click", () => {
-      player1_mark = o_mark_btn.textContent;
-      player2_mark = x_mark_btn.textContent;
-      toggleMark(o_mark_btn, x_mark_btn);
-    });
-  })();
-
-  const setUpTwoPlayersMark = (() => {
-    const x_mark_btn1 = document.querySelector("#player1-x-mark");
-    const x_mark_btn2 = document.querySelector("#player2-x-mark");
-    const o_mark_btn1 = document.querySelector("#player1-o-mark");
-    const o_mark_btn2 = document.querySelector("#player2-o-mark");
-
-    const mark_variation1 = () => {
-      player1_mark = x_mark_btn1.textContent;
-      player2_mark = o_mark_btn2.textContent;
-      toggleMark(x_mark_btn1, o_mark_btn1);
-      toggleMark(o_mark_btn2, x_mark_btn2);
     };
 
-    const mark_variation2 = () => {
-      player1_mark = o_mark_btn1.textContent;
-      player2_mark = x_mark_btn2.textContent;
-      toggleMark(o_mark_btn1, x_mark_btn1);
-      toggleMark(x_mark_btn2, o_mark_btn2);
-    };
+    const setUpOnePlayerMark = (() => {
+      const x_mark_btn = document.querySelector("#x-mark");
+      const o_mark_btn = document.querySelector("#o-mark");
+      x_mark_btn.addEventListener("click", () => {
+        player1_mark = x_mark_btn.textContent;
+        player2_mark = o_mark_btn.textContent;
+        toggleMark(x_mark_btn, o_mark_btn);
+      });
+      o_mark_btn.addEventListener("click", () => {
+        player1_mark = o_mark_btn.textContent;
+        player2_mark = x_mark_btn.textContent;
+        toggleMark(o_mark_btn, x_mark_btn);
+      });
+    })();
 
-    x_mark_btn1.addEventListener("click", mark_variation1);
+    const setUpTwoPlayersMark = (() => {
+      const x_mark_btn1 = document.querySelector("#player1-x-mark");
+      const x_mark_btn2 = document.querySelector("#player2-x-mark");
+      const o_mark_btn1 = document.querySelector("#player1-o-mark");
+      const o_mark_btn2 = document.querySelector("#player2-o-mark");
 
-    x_mark_btn2.addEventListener("click", mark_variation2);
+      const mark_variation1 = () => {
+        player1_mark = x_mark_btn1.textContent;
+        player2_mark = o_mark_btn2.textContent;
+        toggleMark(x_mark_btn1, o_mark_btn1);
+        toggleMark(o_mark_btn2, x_mark_btn2);
+      };
 
-    o_mark_btn1.addEventListener("click", mark_variation2);
+      const mark_variation2 = () => {
+        player1_mark = o_mark_btn1.textContent;
+        player2_mark = x_mark_btn2.textContent;
+        toggleMark(o_mark_btn1, x_mark_btn1);
+        toggleMark(x_mark_btn2, o_mark_btn2);
+      };
 
-    o_mark_btn2.addEventListener("click", mark_variation1);
+      x_mark_btn1.addEventListener("click", mark_variation1);
+
+      x_mark_btn2.addEventListener("click", mark_variation2);
+
+      o_mark_btn1.addEventListener("click", mark_variation2);
+
+      o_mark_btn2.addEventListener("click", mark_variation1);
+    })();
   })();
 
-  const setUpDifficultyBtn = (() => {
-    const difficultyBtns = document.querySelectorAll(".difficulty-btn");
-    difficultyBtns.forEach((btn) => {
+  const setUpDifficulty = (() => {
+    const difficulty_btns = document.querySelectorAll(".difficulty-btn");
+    difficulty_btns.forEach((btn) => {
       btn.addEventListener("click", () => {
-        if (btn.textContent == "Easy") {
-          computer_player = "Easy peasy AI";
-          aiDifficulty = "Easy";
+        if (btn.textContent === "Easy") {
+          GameStat.setAiDifficulty(1);
+        } else if (btn.textContent === "Medium") {
+          GameStat.setAiDifficulty(2);
+        } else if (btn.textContent === "Hard") {
+          GameStat.setAiDifficulty(3);
         }
       });
     });
