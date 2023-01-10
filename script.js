@@ -134,6 +134,7 @@ const DisplayController = (() => {
   const scoreboard_score1 = document.querySelector(".player1-total .end-score");
   const scoreboard_score2 = document.querySelector(".player2-total .end-score");
   const score_difference = document.querySelector(".score-difference");
+  const congrats_msg = document.querySelector(".congrats-msg");
 
   const displayBoard = (board) => {
     for (let i = 0; i < board.length; i++) {
@@ -226,7 +227,7 @@ const DisplayController = (() => {
     }
   };
 
-  const displayScoreBoard = (player1, player2) => {
+  const displayScoreBoard = (player1, player2, game_mode) => {
     scoreboard.style.display = "flex";
     end_screen.style.display = "none";
     overlay.style.display = "block";
@@ -242,11 +243,14 @@ const DisplayController = (() => {
     } else {
       winner = null;
     }
+    if (game_mode === 1 && winner === player2) {
+      congrats_msg.textContent = "If you learn from a loss you have not lost.";
+    }
     if (winner) {
       score_difference.textContent = `${winner.getName()} wins by
             ${Math.abs(player1.getScore() - player2.getScore())} score`;
     } else {
-      score_difference.textContent = "It's a win-win situation";
+      score_difference.textContent = "It's a win-win!";
     }
   };
 
