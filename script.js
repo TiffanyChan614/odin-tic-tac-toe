@@ -329,6 +329,7 @@ const HumanPlayer = (name, mark) => {
   const getMark = player.getMark;
   const getScore = player.getScore;
   const setScore = player.setScore;
+  const getType = () => "human";
   const makeMove = (...args) => {
     // console.log("human move");
     let position = args;
@@ -342,7 +343,7 @@ const HumanPlayer = (name, mark) => {
       return false;
     }
   };
-  return { getName, getMark, getScore, setScore, makeMove };
+  return { getName, getMark, getScore, setScore, getType, makeMove };
 };
 
 const EasyAIPlayer = (name, mark) => {
@@ -351,6 +352,7 @@ const EasyAIPlayer = (name, mark) => {
   const getMark = player.getMark;
   const getScore = player.getScore;
   const setScore = player.setScore;
+  const getType = () => "ai";
   const makeMove = () => {
     // console.log("ai move");
     let board = GameBoard.getBoard();
@@ -363,8 +365,29 @@ const EasyAIPlayer = (name, mark) => {
     console.log(board);
     DisplayController.fillCell(randomRow, randomCol, mark);
   };
-  return { getName, getMark, getScore, setScore, makeMove };
+  return { getName, getMark, getScore, setScore, getType, makeMove };
 };
+
+// const MediumAIPlayer = (name, mark) => {
+//   let player = Player(name, mark);
+//   const getName = player.getName;
+//   const getMark = player.getMark;
+//   const getScore = player.getScore;
+//   const setScore = player.setScore;
+//   const makeMove = () => {
+//     // console.log("ai move");
+//     let board = GameBoard.getBoard();
+//     let randomRow, randomCol;
+//     do {
+//       randomRow = Math.floor(Math.random() * board.length);
+//       randomCol = Math.floor(Math.random() * board.length);
+//     } while (!GameBoard.isEmpty(randomRow, randomCol));
+//     GameBoard.setBoard(randomRow, randomCol, mark);
+//     console.log(board);
+//     DisplayController.fillCell(randomRow, randomCol, mark);
+//   };
+//   return { getName, getMark, getScore, setScore, makeMove };
+// };
 
 const GameStat = (() => {
   let player1, player2, game_mode, ai_difficulty;
@@ -405,48 +428,90 @@ const GameStat = (() => {
 })();
 
 const GameFlow = (() => {
-  let curr_player, player1_mark, player2_mark;
+  let curr_player, player1_mark, player2_mark, start_player;
 
   const checkGameEnd = () => {
     if (GameBoard.checkWin()) {
       DisplayController.displayEndScreen(curr_player);
-      return true;
+      return {
+        game_end: true,
+        winner: curr_player,
+      };
     } else if (GameBoard.checkBoardFull()) {
       DisplayController.displayEndScreen(null);
-      return true;
+      return {
+        game_end: true,
+        winner: null,
+      };
     }
-    return false;
+    return {
+      game_end: false,
+      winner: null,
+    };
   };
 
-  const moveHandler = (e) => {
-    cell_num = e.target.id.replace(/[^0-9]/g, "");
-    curr_player.makeMove(cell_num[0], cell_num[1]);
-    if (!checkGameEnd()) {
+  const handleTurnEnd = (game_state) => {
+    if (!game_state.game_end) {
       curr_player = switchPlayer(curr_player);
-      if (GameStat.getGameMode() === 1) {
-        setTimeout(() => {
-          curr_player.makeMove();
-          if (!checkGameEnd()) {
-            curr_player = switchPlayer(curr_player);
-          }
-        }, 500);
-      }
+      DisplayController.displayPlayer(curr_player);
+    } else {
+      setNextRoundStartPlayer(game_state.winner);
     }
   };
 
-  const playerMove = (() => {
+  const setNextRoundStartPlayer = (winner) => {
+    if (winner) console.log("winner: ", winner.getName());
+    if (winner) {
+      start_player = switchPlayer(winner);
+    } else {
+      start_player = switchPlayer(start_player);
+    }
+    curr_player = start_player;
+  };
+
+  const aiMove = () => {
+    let game_state;
+    setTimeout(() => {
+      curr_player.makeMove();
+      game_state = checkGameEnd();
+      handleTurnEnd(game_state);
+    }, 500);
+    return game_state;
+  };
+
+  const playerMoveHandler = (e) => {
+    let cell_num = e.target.id.replace(/[^0-9]/g, "");
+    curr_player.makeMove(cell_num[0], cell_num[1]);
+    let game_state = checkGameEnd();
+    console.log(game_state);
+    if (!game_state.game_end) {
+      curr_player = switchPlayer(curr_player);
+      DisplayController.displayPlayer(curr_player);
+      if (GameStat.getGameMode() === 1) {
+        game_state = aiMove();
+        console.log(game_state);
+      }
+    } else {
+      console.log("Game end");
+      setNextRoundStartPlayer(game_state.winner);
+    }
+  };
+
+  const playerMove = () => {
+    if (curr_player && curr_player.getType() === "ai") {
+      aiMove();
+    }
     const cells = document.querySelectorAll(".cell");
     Array.from(cells).forEach((cell) => {
-      cell.addEventListener("click", moveHandler);
+      cell.addEventListener("click", playerMoveHandler);
     });
-  })();
+  };
 
   const switchPlayer = (curr_player) => {
     let next_player =
       curr_player === GameStat.getPlayer1()
         ? GameStat.getPlayer2()
         : GameStat.getPlayer1();
-    DisplayController.displayPlayer(next_player);
     return next_player;
   };
 
@@ -477,14 +542,13 @@ const GameFlow = (() => {
       player2_mark = undefined;
     };
 
-    const initGame = () => {
-      curr_player = GameStat.getPlayer1();
+    const initBoard = () => {
       GameBoard.initBoard();
       DisplayController.resetCell();
     };
 
     const initDisplay = () => {
-      DisplayController.displayPlayer(GameStat.getPlayer1());
+      DisplayController.displayPlayer(curr_player);
       DisplayController.displayRound(GameStat.getRound());
       DisplayController.displayScore(
         GameStat.getPlayer1(),
@@ -508,26 +572,32 @@ const GameFlow = (() => {
       );
     };
 
-    const newGame = () => {
+    const initGame = () => {
       if (getPlayer()) {
-        initGame();
+        curr_player = GameStat.getPlayer1();
+        start_player = curr_player;
+        initBoard();
         initDisplay();
+        playerMove();
       }
     };
 
     const reset = () => {
-      initGame();
-      DisplayController.displayPlayer(GameStat.getPlayer1());
+      initBoard();
+      DisplayController.displayPlayer(curr_player);
       DisplayController.displayScore(
         GameStat.getPlayer1(),
         GameStat.getPlayer2()
       );
       DisplayController.displayGameScreen();
+      playerMove();
     };
 
     const setUpStartBtn = (() => {
       const start_btn = document.querySelector("#start");
-      start_btn.addEventListener("click", newGame);
+      start_btn.addEventListener("click", () => {
+        initGame();
+      });
     })();
 
     const setUpNewRoundBtn = (() => {
@@ -546,7 +616,10 @@ const GameFlow = (() => {
 
     const setUpResetBtn = (() => {
       const reset_btn = document.querySelector("#reset");
-      reset_btn.addEventListener("click", reset);
+      reset_btn.addEventListener("click", () => {
+        curr_player = start_player;
+        reset();
+      });
     })();
 
     const setUpEndGameBtn = (() => {
